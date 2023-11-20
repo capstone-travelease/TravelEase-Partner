@@ -2,12 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+svg {
+    vertical-align: initial;
+}
+
 html {
-    line-height: 1.2;
+    line-height: 1.5;
     height: 100%;
 }
 body {
-    /* font-family: 'Helvetica Neue', Helvetica, Arial; */
     font-family:
         Inter,
         ui-sans-serif,
@@ -25,4 +28,5 @@ body {
         Segoe UI Symbol,
         'Noto Color Emoji';
     font-weight: 400;
+    margin: 0;
 }

@@ -15,5 +15,5 @@ export default function useRouteElements() {
         }
     ])
 
-    return { element }
+    return element
 }
