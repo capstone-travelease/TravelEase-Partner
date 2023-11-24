@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
 svg {
     vertical-align: initial;
 }
@@ -29,4 +34,15 @@ body {
         'Noto Color Emoji';
     font-weight: 400;
     margin: 0;
+}
+ol,
+ul {
+    list-style: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+a {
+    text-decoration: none;
 }

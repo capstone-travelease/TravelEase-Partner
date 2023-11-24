@@ -6,9 +6,11 @@ export const themeConfig: ThemeConfig = {
         colorPrimary: COLORS.PRIMARY,
         colorInfo: COLORS.PRIMARY,
         fontFamily: FONT_FAMILY,
-        fontSize: 14,
+        fontSize: 16,
         lineHeight: 1.5,
         colorBorder: '#AEAEAE',
-        fontSizeLG: 16
+        fontSizeLG: 16,
+        controlHeight: 40,
+        controlHeightLG: 56
     }
 }
