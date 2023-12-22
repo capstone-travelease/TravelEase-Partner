@@ -1,3 +1,3 @@
-import ConfirmRegisteration from './ConfirmRegistration'
+import ConfirmRegistration from './ConfirmRegistration'
 
-export default ConfirmRegisteration
+export default ConfirmRegistration

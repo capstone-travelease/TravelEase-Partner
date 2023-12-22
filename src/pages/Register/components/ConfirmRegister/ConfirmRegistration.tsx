@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
+import { ROUTES } from 'src/constants/Routes'
 
-export default function ConfirmRegisteration() {
+export default function ConfirmRegistration() {
     return (
         <div className='my-20'>
             <div className='mb-5 font-medium'>One last step: Confirm your registration</div>
@@ -139,7 +140,7 @@ export default function ConfirmRegisteration() {
             <div className='mt-5'>Confirm your registration by clicking the link we`ve sent to your email.</div>
             <div>
                 Not receiving any emails?{' '}
-                <Link to={'/'} className='text-primary'>
+                <Link to={ROUTES.HOME_MANAGEMENT} className='text-primary'>
                     Resend email
                 </Link>
             </div>

@@ -10,7 +10,7 @@ export const themeConfig: ThemeConfig = {
         lineHeight: 1.5,
         colorBorder: '#AEAEAE',
         fontSizeLG: 16,
-        controlHeight: 40,
-        controlHeightLG: 56
+        controlHeight: 42,
+        controlHeightLG: 52
     }
 }

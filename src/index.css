@@ -6,6 +6,7 @@
     margin: 0;
     padding: 0;
     border: 0;
+    box-sizing: border-box;
 }
 svg {
     vertical-align: initial;
@@ -45,4 +46,5 @@ table {
 }
 a {
     text-decoration: none;
+    color: unset;
 }

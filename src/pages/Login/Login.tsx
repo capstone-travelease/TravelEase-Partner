@@ -1,14 +1,19 @@
 import { Button, Checkbox, Form, Input } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ROUTES } from 'src/constants/Routes'
 
 export default function Login() {
+    const navigate = useNavigate()
+
+    const handleLogin = () => {
+        navigate('/management')
+    }
     return (
         <div className='py-14 px-16 flex-1'>
             <div className='mb-5'>Start for free</div>
             <h1 className='mb-5'>Sign In to TravelEase</h1>
-            <Form requiredMark={false} layout='vertical'>
+            <Form requiredMark={false} layout='vertical' onFinish={handleLogin}>
                 <Form.Item label='Email' name='email' rules={[{ required: true }]}>
                     <Input size='large' placeholder='Enter your email' className='border-2' suffix={<MailOutlined />} />
                 </Form.Item>
