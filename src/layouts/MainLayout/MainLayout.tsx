@@ -1,7 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { Link } from 'react-router-dom'
-
 import Header from 'src/components/Header'
 import { ROUTES } from 'src/constants/Routes'
 
@@ -96,9 +95,11 @@ export default function MainLayout() {
                             We are happy to hear that! Click the button below to begin listing your new hotel. The
                             registration process may take up to 15 minutes.
                         </p>
-                        <Button type='primary' icon={<PlusOutlined />}>
-                            List new hotel
-                        </Button>
+                        <Link to={ROUTES.CREATE_HOTEL}>
+                            <Button type='primary' icon={<PlusOutlined />}>
+                                List new hotel
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>

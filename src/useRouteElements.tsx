@@ -4,6 +4,7 @@ import AuthLayout from './layouts/AuthLayout'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import MainLayout from './layouts/MainLayout'
+import CreateHotelLayout from './layouts/CreateHotelLayout'
 import DashBoard from './pages/DashBoard'
 
 export default function useRouteElements() {
@@ -31,6 +32,10 @@ export default function useRouteElements() {
                     <Register />
                 </AuthLayout>
             )
+        },
+        {
+            path: ROUTES.CREATE_HOTEL,
+            element: <CreateHotelLayout />
         },
         {
             path: ROUTES.HOME_MANAGEMENT,
