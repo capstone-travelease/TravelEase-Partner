@@ -4,6 +4,6 @@ export const ROUTES = {
     REGISTER: '/register',
     FORGOT_PASSWORD: '/forgot',
     HOME_MANAGEMENT: '/management',
-    DASHBOARD: '/dashboard',
+    DASHBOARD: '/hotel',
     CREATE_HOTEL: '/create-hotel'
 } as const

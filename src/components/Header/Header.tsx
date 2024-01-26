@@ -2,6 +2,7 @@ import { BellOutlined, LoginOutlined, SettingOutlined, UserOutlined } from '@ant
 import { Avatar, Badge, Dropdown, MenuProps } from 'antd'
 import { Link } from 'react-router-dom'
 import logoImage from 'src/assets/logo.png'
+import { ROUTES } from 'src/constants/Routes'
 
 const items: MenuProps['items'] = [
     {
@@ -31,7 +32,12 @@ interface Props {
 export default function Header({ logo = true }: Props) {
     return (
         <div className='bg-white shadow px-7 inset-2 flex justify-between items-center'>
-            <div className='w-20 h-20'>{logo && <img src={logoImage} alt='logo' className='w-full h-full' />}</div>
+            <div className='w-20 h-20 flex items-center'>
+                {logo && <img src={logoImage} alt='logo' className='w-full h-full' />}
+                <Link to={ROUTES.HOME_MANAGEMENT} className='ml-5 font-semibold'>
+                    Dashboard
+                </Link>
+            </div>
             <div className='flex items-center'>
                 <Dropdown menu={{ items }} trigger={['click']}>
                     <div className='flex text-end cursor-pointer items-center'>

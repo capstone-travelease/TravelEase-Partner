@@ -21,9 +21,6 @@ export default function MainLayout() {
                         <div className='p-5'>
                             <div className='flex justify-between items-center'>
                                 <h3>Royale President Hotel</h3>
-                                <Button type='primary' size='small' className=''>
-                                    New Request
-                                </Button>
                             </div>
                             <div className='mt-3'>
                                 Phone Number <strong>0947284774</strong>
@@ -49,9 +46,6 @@ export default function MainLayout() {
                         <div className='p-5'>
                             <div className='flex justify-between items-center'>
                                 <h3>Royale President Hotel</h3>
-                                <Button type='primary' size='small' className=''>
-                                    New Request
-                                </Button>
                             </div>
                             <div className='mt-3'>
                                 Phone Number <strong>0947284774</strong>
