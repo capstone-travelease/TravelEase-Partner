@@ -1,6 +1,7 @@
 import { Steps } from 'antd'
 import { useState } from 'react'
 import Header from 'src/components/Header'
+import CreateHotelConfirm from 'src/pages/CreateHotel/components/CreateHotelConfirm'
 import CreateHotelDetail from 'src/pages/CreateHotel/components/CreateHotelDetail'
 import CreateHotelFacilities from 'src/pages/CreateHotel/components/CreateHotelFacilities'
 import CreateHotelPhoto from 'src/pages/CreateHotel/components/CreateHotelPhoto'
@@ -20,6 +21,10 @@ export default function CreateHotelLayout() {
         console.log(value)
         setCurrent(3)
     }
+    const onFinishHotelPhoto = (value: unknown) => {
+        console.log(value)
+        setCurrent(4)
+    }
 
     const prev = () => {
         setCurrent(current - 1)
@@ -30,6 +35,10 @@ export default function CreateHotelLayout() {
     }
 
     const steps = [
+        {
+            title: 'Confirm',
+            content: <CreateHotelConfirm />
+        },
         {
             title: 'Hotel Information',
             content: <CreateHotelDetail onFinishHotelInfo={onFinishHotelInfo} />
@@ -44,11 +53,7 @@ export default function CreateHotelLayout() {
         },
         {
             title: 'Photo',
-            content: <CreateHotelPhoto prev={prev} />
-        },
-        {
-            title: 'Confirm',
-            content: <CreateHotelDetail />
+            content: <CreateHotelPhoto prev={prev} onFinishHotelPhoto={onFinishHotelPhoto} />
         }
     ]
 

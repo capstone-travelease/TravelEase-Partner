@@ -5,6 +5,7 @@ import { RcFile } from 'antd/es/upload'
 import { useState } from 'react'
 
 type PropsType = {
+    onFinishHotelPhoto: (value: unknown) => void
     prev: () => void
 }
 
@@ -18,7 +19,7 @@ const getBase64 = (file: FileType): Promise<string> =>
         reader.onerror = (error) => reject(error)
     })
 
-export default function CreateHotelPhoto({ prev }: PropsType) {
+export default function CreateHotelPhoto({ onFinishHotelPhoto, prev }: PropsType) {
     const [previewOpen, setPreviewOpen] = useState(false)
     const [previewImage, setPreviewImage] = useState('')
     const [previewTitle, setPreviewTitle] = useState('')
@@ -63,7 +64,7 @@ export default function CreateHotelPhoto({ prev }: PropsType) {
     )
 
     return (
-        <Form layout='vertical'>
+        <Form layout='vertical' onFinish={onFinishHotelPhoto}>
             <Card>
                 <h2>Hotel Photo</h2>
                 <div className='text-gray-500'>Upload some images for your hotel</div>
