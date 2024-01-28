@@ -7,7 +7,7 @@ export default function Login() {
     const navigate = useNavigate()
 
     const handleLogin = () => {
-        navigate('/management')
+        navigate(ROUTES.DASHBOARD)
     }
     return (
         <div className='py-14 px-16 flex-1'>

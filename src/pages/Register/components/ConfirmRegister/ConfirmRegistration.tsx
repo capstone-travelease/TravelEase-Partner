@@ -140,7 +140,7 @@ export default function ConfirmRegistration() {
             <div className='mt-5'>Confirm your registration by clicking the link we`ve sent to your email.</div>
             <div>
                 Not receiving any emails?{' '}
-                <Link to={ROUTES.HOME_MANAGEMENT} className='text-primary'>
+                <Link to={ROUTES.DASHBOARD} className='text-primary'>
                     Resend email
                 </Link>
             </div>

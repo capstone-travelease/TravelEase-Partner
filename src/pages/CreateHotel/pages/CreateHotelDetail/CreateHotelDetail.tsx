@@ -21,7 +21,7 @@ export default function CreateHotelDetail({ onFinishHotelInfo }: PropsType) {
                 <div className='mt-5'>
                     <div className='flex'>
                         <div className='min-w-[25%]'>Hotel Name</div>
-                        <Form.Item name='hotel_name' className='w-full' hasFeedback rules={[{ required: true }]}>
+                        <Form.Item name='hotel_name' className='w-full' hasFeedback>
                             <Input size='large' />
                         </Form.Item>
                     </div>

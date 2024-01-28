@@ -30,7 +30,7 @@ export default function CreateHotelPolicy({ onFinishHotelPolicy, prev }: PropsTy
                             </svg>
                             <div>Check-in policy</div>
                         </div>
-                        <Form.Item name='check_in_policy' className='w-full' hasFeedback rules={[{ required: true }]}>
+                        <Form.Item name='check_in_policy' className='w-full' hasFeedback>
                             <Input size='large' />
                         </Form.Item>
                     </div>
@@ -52,7 +52,7 @@ export default function CreateHotelPolicy({ onFinishHotelPolicy, prev }: PropsTy
                             </svg>
                             <div>Check-out policy</div>
                         </div>
-                        <Form.Item name='check_out_policy' className='w-full' hasFeedback rules={[{ required: true }]}>
+                        <Form.Item name='check_out_policy' className='w-full' hasFeedback>
                             <Input size='large' />
                         </Form.Item>
                     </div>
@@ -98,9 +98,64 @@ export default function CreateHotelPolicy({ onFinishHotelPolicy, prev }: PropsTy
                             </svg>
                             Payment Policy
                         </div>
-                        <Form.Item className='w-full'>
-                            <Input.TextArea size='large' />
-                        </Form.Item>
+                        <div className='w-full'>
+                            <Form.Item className='w-full'>
+                                <Input.TextArea size='large' />
+                            </Form.Item>
+                            <div className='flex'>
+                                <div className='border mr-4 border-gray-300 min-w-[80px] text-center bg-gray-200  rounded-lg p-2 border-solid'>
+                                    <svg
+                                        xmlns='http://www.w3.org/2000/svg'
+                                        fill='none'
+                                        viewBox='0 0 24 24'
+                                        strokeWidth={1.5}
+                                        stroke='currentColor'
+                                        className='w-6 h-6 m-auto block'
+                                    >
+                                        <path
+                                            strokeLinecap='round'
+                                            strokeLinejoin='round'
+                                            d='M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3'
+                                        />
+                                    </svg>
+                                    E-Wallet
+                                </div>
+                                <div className='border border-gray-300  min-w-[80px] mr-4 text-center bg-gray-200  rounded-lg p-2 border-solid'>
+                                    <svg
+                                        xmlns='http://www.w3.org/2000/svg'
+                                        fill='none'
+                                        viewBox='0 0 24 24'
+                                        strokeWidth={1.5}
+                                        stroke='currentColor'
+                                        className='w-6 h-6 m-auto block'
+                                    >
+                                        <path
+                                            strokeLinecap='round'
+                                            strokeLinejoin='round'
+                                            d='M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z'
+                                        />
+                                    </svg>
+                                    Bank
+                                </div>
+                                <div className='border border-gray-300  min-w-[80px] text-center bg-gray-200  rounded-lg p-2 border-solid'>
+                                    <svg
+                                        xmlns='http://www.w3.org/2000/svg'
+                                        fill='none'
+                                        viewBox='0 0 24 24'
+                                        strokeWidth={1.5}
+                                        stroke='currentColor'
+                                        className='w-6 h-6 block m-auto'
+                                    >
+                                        <path
+                                            strokeLinecap='round'
+                                            strokeLinejoin='round'
+                                            d='M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z'
+                                        />
+                                    </svg>
+                                    Cash
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <Divider className='bg-gray-400' />
                     <div className='flex'>

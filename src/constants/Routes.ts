@@ -3,7 +3,7 @@ export const ROUTES = {
     LOGIN: '/login',
     REGISTER: '/register',
     FORGOT_PASSWORD: '/forgot',
-    HOME_MANAGEMENT: '/management',
-    DASHBOARD: '/hotel',
+    HOTEL: '/hotel',
+    DASHBOARD: '/dashboard',
     CREATE_HOTEL: '/create-hotel'
 } as const

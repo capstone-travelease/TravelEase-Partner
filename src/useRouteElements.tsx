@@ -3,9 +3,9 @@ import { ROUTES } from './constants/Routes'
 import AuthLayout from './layouts/AuthLayout'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import MainLayout from './layouts/MainLayout'
-import CreateHotelLayout from './layouts/CreateHotelLayout'
-import DashBoard from './pages/DashBoard'
+import CreateHotelLayout from './pages/CreateHotel/layouts/CreateHotelLayout'
+import HotelOverview from './pages/HotelOverview'
+import Dashboard from './pages/Dashboard'
 
 export default function useRouteElements() {
     const element = useRoutes([
@@ -38,12 +38,12 @@ export default function useRouteElements() {
             element: <CreateHotelLayout />
         },
         {
-            path: ROUTES.HOME_MANAGEMENT,
-            element: <MainLayout />
+            path: ROUTES.DASHBOARD,
+            element: <Dashboard />
         },
         {
-            path: `${ROUTES.DASHBOARD}/:id`,
-            element: <DashBoard />
+            path: `${ROUTES.HOTEL}/:id`,
+            element: <HotelOverview />
         }
     ])
 

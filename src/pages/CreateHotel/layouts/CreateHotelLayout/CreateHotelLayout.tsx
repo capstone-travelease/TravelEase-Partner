@@ -1,14 +1,18 @@
-import { Steps } from 'antd'
+import { Spin, Steps } from 'antd'
 import { useState } from 'react'
 import Header from 'src/components/Header'
-import CreateHotelConfirm from 'src/pages/CreateHotel/components/CreateHotelConfirm'
-import CreateHotelDetail from 'src/pages/CreateHotel/components/CreateHotelDetail'
-import CreateHotelFacilities from 'src/pages/CreateHotel/components/CreateHotelFacilities'
-import CreateHotelPhoto from 'src/pages/CreateHotel/components/CreateHotelPhoto'
-import CreateHotelPolicy from 'src/pages/CreateHotel/components/CreateHotelPolicy'
+import ModalNotification from 'src/components/ModalNotification'
+import { ROUTES } from 'src/constants/Routes'
+import CreateHotelConfirm from 'src/pages/CreateHotel/pages/CreateHotelConfirm'
+import CreateHotelDetail from 'src/pages/CreateHotel/pages/CreateHotelDetail'
+import CreateHotelFacilities from 'src/pages/CreateHotel/pages/CreateHotelFacilities'
+import CreateHotelPhoto from 'src/pages/CreateHotel/pages/CreateHotelPhoto'
+import CreateHotelPolicy from 'src/pages/CreateHotel/pages/CreateHotelPolicy'
 
 export default function CreateHotelLayout() {
     const [current, setCurrent] = useState(0)
+    const [spinning, setSpinning] = useState<boolean>(false)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     const onFinishHotelInfo = (value: unknown) => {
         console.log(value)
@@ -34,11 +38,16 @@ export default function CreateHotelLayout() {
         setCurrent(current + 1)
     }
 
+    const handleCreateHotel = () => {
+        console.log(current)
+        setSpinning(true)
+        setTimeout(() => {
+            setSpinning(false)
+            setIsModalOpen(true)
+        }, 1000)
+    }
+
     const steps = [
-        {
-            title: 'Confirm',
-            content: <CreateHotelConfirm />
-        },
         {
             title: 'Hotel Information',
             content: <CreateHotelDetail onFinishHotelInfo={onFinishHotelInfo} />
@@ -54,11 +63,17 @@ export default function CreateHotelLayout() {
         {
             title: 'Photo',
             content: <CreateHotelPhoto prev={prev} onFinishHotelPhoto={onFinishHotelPhoto} />
+        },
+        {
+            title: 'Confirm',
+            content: <CreateHotelConfirm prev={prev} handleCreateHotel={handleCreateHotel} />
         }
     ]
 
     return (
         <div className='bg-secondary min-h-screen'>
+            <Spin spinning={spinning} size='large' fullscreen />
+            <ModalNotification open={isModalOpen} btnContent='Go Dashboard' routes={ROUTES.DASHBOARD} />
             <Header logo={true} />
             <div className='p-7 flex'>
                 <div className='w-[30%]'>
