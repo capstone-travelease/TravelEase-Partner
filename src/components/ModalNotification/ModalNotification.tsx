@@ -10,10 +10,11 @@ type PropsType = {
 export default function ModalNotification({ open, btnContent, routes }: PropsType) {
     return (
         <>
-            <Modal open={open} className='p-0' closeIcon={false} footer={false}>
+            <Modal open={open} centered width={450} closeIcon={false} footer={false}>
                 <Result
                     status='success'
                     title='Successfully'
+                    className='p-2'
                     subTitle='Your request to create a new hotel has been sent successfully'
                     extra={[
                         <Link to={routes} key='console'>

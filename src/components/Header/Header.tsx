@@ -34,7 +34,7 @@ export default function Header({ logo = true }: Props) {
         <div className='bg-white shadow px-7 inset-2 flex justify-between items-center'>
             <div className='w-20 h-20 flex items-center'>
                 {logo && <img src={logoImage} alt='logo' className='w-full h-full' />}
-                <Link to={ROUTES.DASHBOARD} className='ml-5 font-semibold'>
+                <Link to={ROUTES.DASHBOARD} className={logo ? 'ml-5 font-semibold' : 'font-semibold'}>
                     Dashboard
                 </Link>
             </div>

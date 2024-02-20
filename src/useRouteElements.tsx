@@ -4,8 +4,8 @@ import AuthLayout from './layouts/AuthLayout'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import CreateHotelLayout from './pages/CreateHotel/layouts/CreateHotelLayout'
-import HotelOverview from './pages/HotelOverview'
 import Dashboard from './pages/Dashboard'
+import HotelManagementLayout from './layouts/HotelManagementLayout'
 
 export default function useRouteElements() {
     const element = useRoutes([
@@ -43,7 +43,7 @@ export default function useRouteElements() {
         },
         {
             path: `${ROUTES.HOTEL}/:id`,
-            element: <HotelOverview />
+            element: <HotelManagementLayout />
         }
     ])
 
