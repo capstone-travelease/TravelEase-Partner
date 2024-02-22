@@ -5,7 +5,8 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import CreateHotelLayout from './pages/CreateHotel/layouts/CreateHotelLayout'
 import HotelManagementLayout from './layouts/HotelManagementLayout'
-import Dashboard from './pages/Dashboard'
+import DashBoardLayout from './layouts/DashBoardLayout'
+import DashBoard from './pages/DashBoard'
 
 export default function useRouteElements() {
     const element = useRoutes([
@@ -39,7 +40,11 @@ export default function useRouteElements() {
         },
         {
             path: ROUTES.DASHBOARD,
-            element: <Dashboard />
+            element: (
+                <DashBoardLayout>
+                    <DashBoard />
+                </DashBoardLayout>
+            )
         },
         {
             path: `${ROUTES.HOTEL}/:id`,
