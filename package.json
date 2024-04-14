@@ -16,7 +16,7 @@
         "@ant-design/icons": "^5.2.6",
         "@tanstack/react-query": "^5.8.4",
         "@tanstack/react-query-devtools": "^5.8.4",
-        "antd": "^5.11.2",
+        "antd": "^5.16.1",
         "axios": "^1.6.2",
         "lodash": "^4.17.21",
         "react": "^18.2.0",

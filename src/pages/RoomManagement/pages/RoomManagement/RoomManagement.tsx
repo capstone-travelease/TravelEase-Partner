@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
-import { Button, Input, Space, Table } from 'antd'
+import { Badge, Button, Input, Space, Table } from 'antd'
 
 interface DataType {
     key: string | number
@@ -7,6 +7,9 @@ interface DataType {
     image: string
     name: string
     quantity: number | string
+    roomPrice: number
+    status: string
+    type: string
 }
 
 const data: DataType[] = []
@@ -16,24 +19,28 @@ for (let i = 1; i <= 20; i++) {
         id: i,
         image: 'https://thumbs.dreamstime.com/b/hotel-bed-room-21064950.jpg',
         name: 'John Brown',
-        quantity: `${i + 10}`
+        roomPrice: 100,
+        quantity: `${i + 10}`,
+        status: 'Active',
+        type: 'Luxury'
     })
 }
 
 const columns = [
     {
+        key: 'id',
+        title: 'Room ID',
+        dataIndex: 'id',
+        width: 120
+    },
+    {
         key: 'image',
         title: 'Image',
         render: (record: DataType) => (
-            <div className='w-[60%] h-14 rounded overflow-hidden relative'>
+            <div className='w-14 h-14 rounded overflow-hidden relative'>
                 <img src={record.image} alt='' className='w-full h-full absolute object-cover' />
             </div>
         )
-    },
-    {
-        key: 'id',
-        title: 'Room ID',
-        dataIndex: 'id'
     },
     {
         key: 'name',
@@ -41,9 +48,24 @@ const columns = [
         dataIndex: 'name'
     },
     {
+        key: 'roomPrice',
+        title: 'Room Price',
+        dataIndex: 'roomPrice'
+    },
+    {
+        key: 'status',
+        title: 'Status',
+        render: (record: DataType) => <Badge status='success' text={record.status} />
+    },
+    {
         key: 'quantity',
         title: 'Quantity',
         dataIndex: 'quantity'
+    },
+    {
+        key: 'type',
+        title: 'Room Type',
+        dataIndex: 'type'
     },
     {
         key: 'action',

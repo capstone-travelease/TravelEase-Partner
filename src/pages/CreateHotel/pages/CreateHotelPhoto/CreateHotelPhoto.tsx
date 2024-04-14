@@ -1,7 +1,8 @@
-import { PlusOutlined } from '@ant-design/icons'
+import { PlusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Card, Form, Modal, Upload, message } from 'antd'
 import type { UploadFile, UploadProps } from 'antd'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { RcFile } from 'antd/es/upload'
 
 type PropsType = {
     onFinishHotelPhoto: (value: unknown) => void
@@ -36,6 +37,19 @@ export default function CreateHotelPhoto({ onFinishHotelPhoto, prev }: PropsType
         </button>
     )
 
+    const [files, setFile] = useState<{
+        imageFront: File | undefined
+        imageBack: File | undefined
+    }>()
+
+    const previewImageFront = useMemo(() => {
+        return files?.imageFront ? URL.createObjectURL(files.imageFront) : ''
+    }, [files])
+
+    const previewImageBack = useMemo(() => {
+        return files?.imageBack ? URL.createObjectURL(files.imageBack) : ''
+    }, [files])
+
     return (
         <Form layout='vertical' onFinish={onFinishHotelPhoto}>
             <Card>
@@ -66,6 +80,113 @@ export default function CreateHotelPhoto({ onFinishHotelPhoto, prev }: PropsType
                         <div className='text-red-500 mr-2'>*Note: </div>
                         Maximum 5 photos and file size limit is 2 MB
                     </div>
+                </div>
+            </Card>
+            <Card className='mt-5'>
+                <div className='flex justify-between items-center gap-10'>
+                    <Form.Item
+                        name='id_front'
+                        label='ID front'
+                        className='w-full'
+                        valuePropName='fileList'
+                        getValueFromEvent={(event) => {
+                            return event?.fileList
+                        }}
+                        rules={[
+                            {
+                                validator(_, fileList: RcFile[]) {
+                                    console.log(fileList)
+                                    return new Promise((resolve, rejects) => {
+                                        if (fileList && fileList[0].size > 2097152) {
+                                            rejects('File size limit is 2 MB')
+                                        } else {
+                                            resolve('Success')
+                                        }
+                                    })
+                                }
+                            },
+                            { required: true }
+                        ]}
+                    >
+                        <Upload
+                            accept='.jpg,.gif,.png'
+                            className='h-[250px] relative overflow-hidden border-2 cursor-pointer border-solid rounded border-gray-600 flex items-center justify-center text-center'
+                            showUploadList={false}
+                            maxCount={1}
+                            customRequest={(option) => {
+                                setFile((prev) => {
+                                    return {
+                                        imageFront: option.file as RcFile,
+                                        imageBack: prev?.imageBack
+                                    }
+                                })
+                            }}
+                        >
+                            {previewImageFront ? (
+                                <img
+                                    src={previewImageFront}
+                                    alt=''
+                                    className='w-full h-full absolute object-cover top-0 left-0'
+                                />
+                            ) : (
+                                <div>
+                                    <div>Add photo</div>
+                                    <PlusCircleOutlined />
+                                </div>
+                            )}
+                        </Upload>
+                    </Form.Item>
+                    <Form.Item
+                        name='id_back'
+                        label='ID back'
+                        className='w-full'
+                        valuePropName='fileList'
+                        getValueFromEvent={(event) => {
+                            return event?.fileList
+                        }}
+                        rules={[
+                            {
+                                validator(_, fileList: RcFile[]) {
+                                    return new Promise((resolve, rejects) => {
+                                        if (fileList && fileList[0].size > 2097152) {
+                                            rejects('File size limit is 2 MB')
+                                        } else {
+                                            resolve('Success')
+                                        }
+                                    })
+                                }
+                            },
+                            { required: true }
+                        ]}
+                    >
+                        <Upload
+                            accept='.jpg,.gif,.png'
+                            className='h-[250px] relative overflow-hidden border-2 cursor-pointer border-solid rounded border-gray-600 flex items-center justify-center text-center'
+                            showUploadList={false}
+                            maxCount={1}
+                            customRequest={(option) => {
+                                setFile((prev) => {
+                                    return {
+                                        imageFront: prev?.imageFront,
+                                        imageBack: option.file as RcFile
+                                    }
+                                })
+                            }}
+                        >
+                            {previewImageBack ? (
+                                <img
+                                    src={previewImageBack}
+                                    alt=''
+                                    className='w-full h-full absolute object-cover top-0 left-0'
+                                />
+                            ) : (
+                                <div>
+                                    <div>Add photo</div>
+                                    <PlusCircleOutlined />
+                                </div>
+                            )}
+                        </Upload>
+                    </Form.Item>
                 </div>
             </Card>
             <div className='mt-5 text-end'>

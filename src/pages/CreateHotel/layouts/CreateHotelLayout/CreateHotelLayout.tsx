@@ -61,12 +61,12 @@ export default function CreateHotelLayout() {
             content: <CreateHotelPolicy prev={prev} onFinishHotelPolicy={onFinishHotelPolicy} />
         },
         {
-            title: 'Confirm',
-            content: <CreateHotelConfirm prev={prev} handleCreateHotel={handleCreateHotel} />
-        },
-        {
             title: 'Photo',
             content: <CreateHotelPhoto prev={prev} onFinishHotelPhoto={onFinishHotelPhoto} />
+        },
+        {
+            title: 'Confirm',
+            content: <CreateHotelConfirm prev={prev} handleCreateHotel={handleCreateHotel} />
         }
     ]
 

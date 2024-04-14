@@ -5,33 +5,33 @@ import { useMemo, useState } from 'react'
 import { POLICY } from 'src/constants/AppConstants'
 
 interface Props {
-    setIsRegister: React.Dispatch<React.SetStateAction<number>>
+    setIsRegister: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function IdentityVerification({ setIsRegister }: Props) {
-    const [files, setFile] = useState<{
-        imageFront: File | undefined
-        imageBack: File | undefined
-    }>()
+    const [frontID, setFrontID] = useState<File>()
+    const [backID, setBackID] = useState<File>()
     const [isCheck, setIsCheck] = useState(false)
 
     const previewImageFront = useMemo(() => {
-        return files?.imageFront ? URL.createObjectURL(files.imageFront) : ''
-    }, [files])
+        return frontID ? URL.createObjectURL(frontID) : ''
+    }, [frontID])
 
     const previewImageBack = useMemo(() => {
-        return files?.imageBack ? URL.createObjectURL(files.imageBack) : ''
-    }, [files])
+        return backID ? URL.createObjectURL(backID) : ''
+    }, [backID])
 
-    const handleSubmit = () => {
-        setIsRegister(2)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleFinish = (data: any) => {
+        console.log(data)
+        console.log(frontID, backID)
     }
 
     return (
         <div>
             <div className='mb-1'>Start for free</div>
             <h1 className='mb-5'>Sign Up to TravelEase</h1>
-            <Form requiredMark={false} layout='vertical' onFinish={handleSubmit}>
+            <Form requiredMark={false} layout='vertical' onFinish={handleFinish}>
                 <div className='flex justify-between items-center'>
                     <Form.Item
                         name='id_front'
@@ -44,7 +44,6 @@ export default function IdentityVerification({ setIsRegister }: Props) {
                         rules={[
                             {
                                 validator(_, fileList: RcFile[]) {
-                                    console.log(fileList)
                                     return new Promise((resolve, rejects) => {
                                         if (fileList && fileList[0].size > 2097152) {
                                             rejects('File size limit is 2 MB')
@@ -62,14 +61,7 @@ export default function IdentityVerification({ setIsRegister }: Props) {
                             className='h-24 w-full relative overflow-hidden border-2 cursor-pointer border-solid rounded border-gray-600 flex items-center justify-center text-center'
                             showUploadList={false}
                             maxCount={1}
-                            customRequest={(option) => {
-                                setFile((prev) => {
-                                    return {
-                                        imageFront: option.file as RcFile,
-                                        imageBack: prev?.imageBack
-                                    }
-                                })
-                            }}
+                            customRequest={(option) => setFrontID(option.file as File)}
                         >
                             {previewImageFront ? (
                                 <img
@@ -113,14 +105,7 @@ export default function IdentityVerification({ setIsRegister }: Props) {
                             className='h-24 w-full overflow-hidden relative border-2 cursor-pointer border-solid rounded border-gray-600 flex items-center justify-center text-center'
                             showUploadList={false}
                             maxCount={1}
-                            customRequest={(option) => {
-                                setFile((prev) => {
-                                    return {
-                                        imageFront: prev?.imageFront,
-                                        imageBack: option.file as RcFile
-                                    }
-                                })
-                            }}
+                            customRequest={(option) => setBackID(option.file as File)}
                         >
                             {previewImageBack ? (
                                 <img
@@ -145,9 +130,9 @@ export default function IdentityVerification({ setIsRegister }: Props) {
                     By registering, I agree to TravelEase’s <span className='text-primary'>Privacy Policy</span>
                 </Checkbox>
                 <Button type='primary' disabled={!isCheck} block htmlType='submit' className='mt-3' size='large'>
-                    Create Account
+                    Sign up
                 </Button>
-                <Button onClick={() => setIsRegister(0)} block className='mt-3 bg-gray-400 text-white' size='large'>
+                <Button onClick={() => setIsRegister(false)} block className='mt-3 bg-gray-400 text-white' size='large'>
                     Back
                 </Button>
             </Form>

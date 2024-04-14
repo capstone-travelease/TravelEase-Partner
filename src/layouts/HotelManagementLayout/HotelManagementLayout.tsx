@@ -9,6 +9,7 @@ import { useState } from 'react'
 import HotelOverview from 'src/pages/HotelOverview'
 import HotelDetail from 'src/pages/HotelDetail'
 import RoomManagement from 'src/pages/RoomManagement/pages/RoomManagement'
+import BookingManagment from 'src/pages/BookingManagement'
 
 export default function HotelManagementLayout() {
     const [tabs, setTabs] = useState('1')
@@ -19,10 +20,11 @@ export default function HotelManagementLayout() {
                     components: {
                         Menu: {
                             itemSelectedBg: '#341C1C',
-                            itemHoverColor: '#ccc',
+                            // itemHoverColor: '#ccc',
                             itemHoverBg: '#341C1C',
                             itemMarginInline: 0,
-                            itemHeight: 38
+                            itemHeight: 38,
+                            colorText: '#fff'
                         },
                         Layout: {
                             siderBg: '#180101'
@@ -47,7 +49,7 @@ export default function HotelManagementLayout() {
                             onClick={(info) => {
                                 setTabs(info.key)
                             }}
-                            className='bg-[#180101] !border-none text-base text-white'
+                            className='bg-[#180101] !border-none text-base'
                             items={[
                                 {
                                     label: 'Overview',
@@ -66,7 +68,7 @@ export default function HotelManagementLayout() {
                                     key: '4'
                                 },
                                 {
-                                    label: 'Promo',
+                                    label: 'Booking Management',
                                     key: '5'
                                 },
                                 {
@@ -95,6 +97,7 @@ export default function HotelManagementLayout() {
                             {tabs === '1' && <HotelOverview />}
                             {tabs === '2' && <HotelDetail />}
                             {tabs === '3' && <RoomManagement />}
+                            {tabs === '5' && <BookingManagment />}
                         </div>
                     </Content>
                 </Layout>

@@ -1,21 +1,45 @@
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, Form, Input } from 'antd'
+import { Button, DatePicker, Form, Input, InputNumber, Radio } from 'antd'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ROUTES } from 'src/constants/Routes'
-import ConfirmRegistration from './components/ConfirmRegister'
-import IdentityVerification from './components/IdentityVerification'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import { RegisterFormType } from 'src/types/auth.type'
+import { useMutation } from '@tanstack/react-query'
+import authApi from 'src/apis/auth.api'
+import { toast } from 'react-toastify'
+import { isAxiosBadRequest } from 'src/utils/utils'
+import { omit } from 'lodash'
+import IdentityVerification from 'src/pages/Register/components/IdentityVerification'
+dayjs.extend(customParseFormat)
 
 export default function Register() {
-    const [isRegister, setIsRegister] = useState(0)
+    const [isRegister, setIsRegister] = useState(false)
+    const navigate = useNavigate()
 
-    const handleRegister = () => {
-        setIsRegister(1)
+    const registerMutation = useMutation({
+        mutationFn: authApi.register
+    })
+
+    const handleRegister = (data: RegisterFormType) => {
+        const body = omit({ ...data, birthday: dayjs(data.birthday).format('YYYY-MM-DD') }, 'confirmPassword')
+        registerMutation.mutate(body, {
+            onError: (error) => {
+                if (isAxiosBadRequest(error)) {
+                    toast.error('The email that you entered is already in use!')
+                }
+            },
+            onSuccess: () => {
+                toast.success('Register successfully')
+                navigate(ROUTES.LOGIN)
+            }
+        })
     }
 
     return (
         <div className='py-10 px-16 flex-1'>
-            {isRegister === 0 && (
+            {isRegister === false && (
                 <>
                     <div className='mb-1'>Start for free</div>
                     <h1 className='mb-5'>Sign Up to TravelEase</h1>
@@ -28,7 +52,12 @@ export default function Register() {
                                 suffix={<UserOutlined />}
                             />
                         </Form.Item>
-                        <Form.Item hasFeedback label='Email' name='email' rules={[{ required: true }]}>
+                        <Form.Item
+                            hasFeedback
+                            label='Email'
+                            name='email'
+                            rules={[{ required: true }, { type: 'email' }]}
+                        >
                             <Input
                                 size='large'
                                 placeholder='Enter your email'
@@ -36,7 +65,64 @@ export default function Register() {
                                 suffix={<MailOutlined />}
                             />
                         </Form.Item>
-                        <Form.Item hasFeedback label='Password' name='password' rules={[{ required: true }]}>
+                        <Form.Item
+                            hasFeedback
+                            label='Phone'
+                            name='phonenumber'
+                            rules={[
+                                { required: true },
+                                { pattern: /^\d{10}$/, message: 'The phone number must least 10 number' }
+                            ]}
+                        >
+                            <InputNumber
+                                size='large'
+                                placeholder='Enter your phone'
+                                className='border-2 w-full'
+                                suffix={<MailOutlined />}
+                            />
+                        </Form.Item>
+                        <div className='flex  gap-4'>
+                            <Form.Item
+                                className='w-full'
+                                hasFeedback
+                                label='Gender'
+                                name='gender'
+                                initialValue={true}
+                                rules={[{ required: true }]}
+                            >
+                                <Radio.Group buttonStyle='solid'>
+                                    <Radio.Button value={true}>Male</Radio.Button>
+                                    <Radio.Button value={false}>Female</Radio.Button>
+                                </Radio.Group>
+                            </Form.Item>
+                            <Form.Item
+                                className='w-full'
+                                hasFeedback
+                                label='Birthday'
+                                name='birthday'
+                                rules={[
+                                    { required: true },
+                                    () => ({
+                                        validator(_, value) {
+                                            if (!value || new Date(value) < new Date()) {
+                                                return Promise.resolve()
+                                            }
+                                            return Promise.reject(
+                                                new Error('The birthday that you entered is invalid!')
+                                            )
+                                        }
+                                    })
+                                ]}
+                            >
+                                <DatePicker className='w-full' />
+                            </Form.Item>
+                        </div>
+                        <Form.Item
+                            hasFeedback
+                            label='Password'
+                            name='password'
+                            rules={[{ required: true }, { min: 6 }]}
+                        >
                             <Input.Password
                                 size='large'
                                 placeholder='Password'
@@ -46,7 +132,7 @@ export default function Register() {
                         </Form.Item>
                         <Form.Item
                             hasFeedback
-                            label='Confirm Password'
+                            label='Re-type Password'
                             name='confirmPassword'
                             rules={[
                                 { required: true },
@@ -69,7 +155,14 @@ export default function Register() {
                                 suffix={<LockOutlined />}
                             />
                         </Form.Item>
-                        <Button type='primary' block htmlType='submit' className='mt-3' size='large'>
+                        <Button
+                            type='primary'
+                            block
+                            htmlType='button'
+                            onClick={() => setIsRegister(true)}
+                            className='mt-3'
+                            size='large'
+                        >
                             Next step
                         </Button>
                     </Form>
@@ -81,8 +174,7 @@ export default function Register() {
                     </div>
                 </>
             )}
-            {isRegister === 1 && <IdentityVerification setIsRegister={setIsRegister} />}
-            {isRegister === 2 && <ConfirmRegistration />}
+            {isRegister === true && <IdentityVerification setIsRegister={setIsRegister} />}
         </div>
     )
 }
