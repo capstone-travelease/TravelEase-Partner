@@ -1,47 +1,52 @@
 import { PlusOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button } from 'antd'
+import { Button, Spin } from 'antd'
+import { useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import hotelApi from 'src/apis/hotel.api'
 import { URL_IMAGE } from 'src/constants/AppConstants'
+import hotelApi from 'src/apis/hotel.api'
 import { ROUTES } from 'src/constants/Routes'
-import { getProfile } from 'src/utils/auth'
+import { AppContext } from 'src/contexts/app.context'
 import { checkStatusHotel } from 'src/utils/utils'
+import defaultImage from 'src/assets/defaultImage.svg'
 
 export default function DashBoard() {
-    const userId = getProfile()
-    const { data } = useQuery({
+    const { profile } = useContext(AppContext)
+    const { data, isLoading } = useQuery({
         queryKey: ['hotels'],
-        queryFn: () => hotelApi.getHotelList(userId)
+        queryFn: () => hotelApi.getHotelList(profile?.userId as string)
     })
     const navigate = useNavigate()
 
     return (
         <div className='px-7 py-7'>
+            <Spin spinning={isLoading} fullscreen />
             <div className='grid grid-cols-3 gap-10'>
                 {data?.data.list.map((hotel) => (
-                    <div key={hotel.hotelId} className='bg-white h-fit rounded-sm shadow col-span-1 overflow-hidden'>
-                        <div className='h-44 w-full'>
+                    <div
+                        key={hotel.hotelId}
+                        className='bg-white flex flex-col rounded-sm shadow col-span-1 overflow-hidden'
+                    >
+                        <div className='h-44 w-full flex-shrink-0'>
                             <img
-                                src={URL_IMAGE + '/' + hotel.urlPath[0]}
+                                src={hotel.urlPath[0] ? `${URL_IMAGE}/${hotel.urlPath[0]}` : defaultImage}
                                 alt='hotel_image'
                                 className='object-cover h-full w-full'
                             />
                         </div>
-                        <div className='p-5'>
-                            <div className='flex justify-between items-center'>
+                        <div className='p-5 flex-grow flex flex-col justify-between gap-4'>
+                            <div className='flex flex-col justify-between gap-2'>
                                 <h3>{hotel.hotelName}</h3>
-                            </div>
-                            <div className='mt-3'>
-                                Phone Number <strong>{hotel.hotelPhone}</strong>
-                            </div>
-                            <div className='mt-3'>
-                                Location <strong>{hotel.hotelAddress}</strong>
+                                <div>
+                                    Phone Number <strong>{hotel.hotelPhone}</strong>
+                                </div>
+                                <div>
+                                    Location <strong>{hotel.hotelAddress}</strong>
+                                </div>
                             </div>
                             <Button
                                 type='primary'
                                 block
-                                className='mt-5'
                                 onClick={() => navigate(`${ROUTES.HOTEL}/${hotel.hotelId}`)}
                                 disabled={checkStatusHotel(hotel.statusId).status}
                             >

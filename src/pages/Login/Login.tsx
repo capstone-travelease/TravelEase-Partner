@@ -5,10 +5,13 @@ import { ROUTES } from 'src/constants/Routes'
 import { useMutation } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
 import { isAxiosUnauthorized } from 'src/utils/utils'
+import { useContext } from 'react'
+import { AppContext } from 'src/contexts/app.context'
 
 export default function Login() {
     const [form] = Form.useForm()
     const navigate = useNavigate()
+    const { setIsAuthenticated, setProfile } = useContext(AppContext)
 
     const loginMutation = useMutation({
         mutationFn: authApi.login
@@ -16,7 +19,9 @@ export default function Login() {
 
     const handleLogin = (data: { email: string; password: string }) => {
         loginMutation.mutate(data, {
-            onSuccess: () => {
+            onSuccess: (data) => {
+                setIsAuthenticated(true)
+                setProfile({ userId: data.data.data.userId, fullName: data.data.data.fullName })
                 navigate(ROUTES.DASHBOARD)
             },
             onError: (error) => {

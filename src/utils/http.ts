@@ -1,6 +1,8 @@
 import axios, { AxiosInstance } from 'axios'
+import { toast } from 'react-toastify'
 import { AuthResponse } from 'src/types/auth.type'
-import { getAccessToken, setAccessToken, setProfile } from 'src/utils/auth'
+import { clearLocalStorage, getAccessToken, setAccessToken, setProfile } from 'src/utils/auth'
+import { isAxiosExpiredTokenError } from 'src/utils/utils'
 
 class Http {
     instance: AxiosInstance
@@ -8,7 +10,7 @@ class Http {
     constructor() {
         this.accessToken = getAccessToken()
         this.instance = axios.create({
-            baseURL: 'http://34.87.40.248:7590',
+            baseURL: 'https://www.capstone-partner-api.com/partner',
             timeout: 10000,
             headers: {
                 'Content-Type': 'application/json'
@@ -30,11 +32,19 @@ class Http {
                 if (response.config.url === '/auth/login') {
                     this.accessToken = (response.data as AuthResponse).data.token
                     setAccessToken(this.accessToken)
-                    setProfile((response.data as AuthResponse).data.userId)
+                    setProfile({
+                        userId: (response.data as AuthResponse).data.userId,
+                        fullName: (response.data as AuthResponse).data.fullName
+                    })
                 }
                 return response
             },
             (error) => {
+                if (isAxiosExpiredTokenError(error)) {
+                    this.accessToken = ''
+                    clearLocalStorage()
+                    toast.error('Your session has expired. Please login again.')
+                }
                 return Promise.reject(error)
             }
         )

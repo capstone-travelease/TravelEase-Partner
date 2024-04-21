@@ -13,3 +13,9 @@ export type HotelResponse = {
     message: string
     list: HotelType[]
 }
+
+export type AddHotelResponse = {
+    code: number
+    message: string
+    hotelId: number
+}

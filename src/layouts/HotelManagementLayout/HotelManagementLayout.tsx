@@ -1,18 +1,18 @@
 import Header from 'src/components/Header'
 import logoImage from 'src/assets/logo.png'
-import { Link } from 'react-router-dom'
-import { Badge, Button, ConfigProvider, Layout, Menu } from 'antd'
-import { MailOutlined, MessageOutlined } from '@ant-design/icons'
+import { ConfigProvider, Layout, Menu } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { Content } from 'antd/es/layout/layout'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import HotelOverview from 'src/pages/HotelOverview'
 import HotelDetail from 'src/pages/HotelDetail'
 import RoomManagement from 'src/pages/RoomManagement/pages/RoomManagement'
 import BookingManagment from 'src/pages/BookingManagement'
+import { useParams } from 'react-router-dom'
 
 export default function HotelManagementLayout() {
-    const [tabs, setTabs] = useState('1')
+    const [tabs, setTabs] = useState('2')
+
     return (
         <div className='bg-[#F5F5F5] min-h-screen'>
             <ConfigProvider
@@ -20,7 +20,7 @@ export default function HotelManagementLayout() {
                     components: {
                         Menu: {
                             itemSelectedBg: '#341C1C',
-                            // itemHoverColor: '#ccc',
+                            itemHoverColor: '#ccc',
                             itemHoverBg: '#341C1C',
                             itemMarginInline: 0,
                             itemHeight: 38,
@@ -77,19 +77,6 @@ export default function HotelManagementLayout() {
                                 }
                             ]}
                         />
-                        <h4 className='my-5'>Support</h4>
-                        <Link to={'/'} className='block'>
-                            <Button className='bg-[#341C1C] border-none text-white' block icon={<MailOutlined />}>
-                                Notification
-                                <Badge count={5} className='ml-5' />
-                            </Button>
-                        </Link>
-                        <Link to={'/'} className='mt-3 block'>
-                            <Button className='bg-[#341C1C] border-none text-white' block icon={<MessageOutlined />}>
-                                Messages
-                                <Badge count={2} className='ml-5' />
-                            </Button>
-                        </Link>
                     </Sider>
                     <Content className='ml-[250px]'>
                         <div>

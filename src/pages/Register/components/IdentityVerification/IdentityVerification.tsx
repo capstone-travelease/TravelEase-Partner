@@ -1,17 +1,35 @@
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Form, Upload } from 'antd'
+import { useMutation } from '@tanstack/react-query'
+import { Button, Checkbox, Form, Spin, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import authApi from 'src/apis/auth.api'
 import { POLICY } from 'src/constants/AppConstants'
+import { ROUTES } from 'src/constants/Routes'
+import { RegisterFormType } from 'src/types/auth.type'
 
 interface Props {
     setIsRegister: React.Dispatch<React.SetStateAction<boolean>>
+    setData: React.Dispatch<React.SetStateAction<Omit<RegisterFormType, 'confirmPassword'> | undefined>>
+    data: Omit<RegisterFormType, 'confirmPassword'> | undefined
 }
 
-export default function IdentityVerification({ setIsRegister }: Props) {
+export default function IdentityVerification({ setIsRegister, setData, data }: Props) {
     const [frontID, setFrontID] = useState<File>()
     const [backID, setBackID] = useState<File>()
     const [isCheck, setIsCheck] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const navigate = useNavigate()
+
+    const registerMutation = useMutation({
+        mutationFn: authApi.register
+    })
+
+    const uploadIdentityMutation = useMutation({
+        mutationFn: ({ id, body }: { id: string; body: FormData }) => authApi.uploadIdentity(id, body)
+    })
 
     const previewImageFront = useMemo(() => {
         return frontID ? URL.createObjectURL(frontID) : ''
@@ -21,14 +39,31 @@ export default function IdentityVerification({ setIsRegister }: Props) {
         return backID ? URL.createObjectURL(backID) : ''
     }, [backID])
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleFinish = (data: any) => {
-        console.log(data)
-        console.log(frontID, backID)
+    const handleFinish = async () => {
+        try {
+            if (data && frontID && backID) {
+                setIsLoading(true)
+                const formData = new FormData()
+                formData.append('fontImage', frontID)
+                formData.append('backImage', backID)
+                const registerRes = await registerMutation.mutateAsync(data)
+                const { userId } = registerRes.data
+                await uploadIdentityMutation.mutateAsync({ id: userId.toString(), body: formData })
+                setIsLoading(false)
+                setData(undefined)
+                toast.success('Register successfully')
+                navigate(ROUTES.LOGIN)
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error('The user already exists')
+            setIsLoading(false)
+        }
     }
 
     return (
         <div>
+            <Spin spinning={isLoading} size='large' fullscreen />
             <div className='mb-1'>Start for free</div>
             <h1 className='mb-5'>Sign Up to TravelEase</h1>
             <Form requiredMark={false} layout='vertical' onFinish={handleFinish}>
@@ -132,7 +167,17 @@ export default function IdentityVerification({ setIsRegister }: Props) {
                 <Button type='primary' disabled={!isCheck} block htmlType='submit' className='mt-3' size='large'>
                     Sign up
                 </Button>
-                <Button onClick={() => setIsRegister(false)} block className='mt-3 bg-gray-400 text-white' size='large'>
+                <Button
+                    onClick={() => {
+                        setIsRegister(false)
+                        setData(undefined)
+                        setFrontID(undefined)
+                        setBackID(undefined)
+                    }}
+                    block
+                    className='mt-3 bg-gray-400 text-white'
+                    size='large'
+                >
                     Back
                 </Button>
             </Form>

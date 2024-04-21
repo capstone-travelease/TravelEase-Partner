@@ -104,4 +104,4 @@ export const POLICY = `<p><strong>Privacy Policy for My Website</strong></p>
 <p><br></p>
 <p>If you have any questions about this Privacy Policy, please contact us.</p>  `
 
-export const URL_IMAGE = 'http://34.143.171.128'
+export const URL_IMAGE = 'https://www.capstone-partner-api.com'

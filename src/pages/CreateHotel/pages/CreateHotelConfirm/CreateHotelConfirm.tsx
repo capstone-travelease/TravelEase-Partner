@@ -1,42 +1,74 @@
-import { Button, Card, Divider, Form } from 'antd'
+import { useQuery } from '@tanstack/react-query'
+import { Button, Card, Checkbox, Col, Divider, Row } from 'antd'
+import { RcFile } from 'antd/es/upload'
+import { useMemo } from 'react'
+import facilitiesApi from 'src/apis/facilities.api'
+import {
+    HotelDetailFormValue,
+    HotelPolicyFormValue
+} from 'src/pages/CreateHotel/layouts/CreateHotelLayout/CreateHotelLayout'
 
 type PropsType = {
     prev: () => void
     handleCreateHotel: () => void
+    hotelInfo?: HotelDetailFormValue
+    facilities?: number[]
+    hotelPolicy?: HotelPolicyFormValue
+    hotelPhoto?: RcFile[]
 }
 
-export default function CreateHotelConfirm({ prev, handleCreateHotel }: PropsType) {
+export default function CreateHotelConfirm({
+    prev,
+    handleCreateHotel,
+    hotelInfo,
+    facilities,
+    hotelPhoto,
+    hotelPolicy
+}: PropsType) {
+    const previewImage = useMemo(() => {
+        return hotelPhoto?.map((file) => {
+            return URL.createObjectURL(file as File)
+        })
+    }, [hotelPhoto])
+
+    const { data } = useQuery({
+        queryKey: ['facilities'],
+        queryFn: facilitiesApi.getFacilities
+    })
+
     return (
-        <Form layout='vertical'>
+        <div>
             <h2 className=''>Review Hotel Information</h2>
             <Card className='mt-2'>
                 <div className='flex'>
-                    <div className='min-w-[25%] font-semibold'>Hotel Name</div>
-                    <div>Royale President Hotel</div>
+                    <div className='min-w-[35%] font-semibold'>Hotel Name</div>
+                    <div>{hotelInfo?.hotelName}</div>
                 </div>
                 <Divider className='bg-gray-400' />
                 <div className='flex'>
-                    <div className='min-w-[25%] font-semibold'>Hotel Description</div>
-                    <div>Luxurious hotel in the heart of downtown</div>
+                    <div className='min-w-[35%] font-semibold'>Hotel Description</div>
+                    <div>{hotelInfo?.hotelDescription}</div>
                 </div>
                 <Divider className='bg-gray-400' />
                 <div className='flex'>
-                    <div className='min-w-[25%] font-semibold'>Phone Number</div>
-                    <div>0921387261</div>
+                    <div className='min-w-[35%] font-semibold'>Phone Number</div>
+                    <div>{hotelInfo?.hotelContactNumber}</div>
                 </div>
                 <Divider className='bg-gray-400' />
                 <div className='flex'>
-                    <div className='min-w-[25%] font-semibold'>Address</div>
-                    <div>01 Phan Chu Trinh, Ward 9, TP.HCM, Vietnam</div>
+                    <div className='min-w-[35%] font-semibold'>Address</div>
+                    <div>
+                        {hotelInfo?.hotelAddress}, {hotelInfo?.hotelCity}, {hotelInfo?.hotelCounty}
+                    </div>
                 </div>
                 <Divider className='bg-gray-400' />
                 <div className='flex'>
-                    <div className='min-w-[25%] font-semibold'>Hotel Email Address</div>
-                    <div>presidenthotel@gmail.com</div>
+                    <div className='min-w-[35%] font-semibold'>Hotel Email Address</div>
+                    <div>{hotelInfo?.hotelEmail}</div>
                 </div>
                 <Divider className='bg-gray-400' />
                 <div className='flex'>
-                    <div className='min-w-[25%] font-semibold'>Check-in time</div>
+                    <div className='min-w-[35%] font-semibold'>Check-in time</div>
                     <div>
                         <div className='border flex items-center border-gray-300 min-w-[80px] text-center bg-gray-200  rounded-lg px-2 py-1 border-solid'>
                             <svg
@@ -53,13 +85,13 @@ export default function CreateHotelConfirm({ prev, handleCreateHotel }: PropsTyp
                                     d='M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
                                 />
                             </svg>
-                            13:00
+                            {hotelInfo?.checkInTime}
                         </div>
                     </div>
                 </div>
                 <Divider className='bg-gray-400' />
                 <div className='flex'>
-                    <div className='min-w-[25%] font-semibold'>Check-out time</div>
+                    <div className='min-w-[35%] font-semibold'>Check-out time</div>
                     <div>
                         <div className='border flex items-center border-gray-300 min-w-[80px] text-center bg-gray-200  rounded-lg px-2 py-1 border-solid'>
                             <svg
@@ -76,62 +108,73 @@ export default function CreateHotelConfirm({ prev, handleCreateHotel }: PropsTyp
                                     d='M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
                                 />
                             </svg>
-                            12:00
+                            {hotelInfo?.checkOutTime}
                         </div>
                     </div>
                 </div>
-            </Card>
-            <h2 className='mt-4'>Contact Signatory Information</h2>
-            <Card className='mt-2'>
-                <div className='flex'>
-                    <div className='min-w-[25%] font-semibold'>Full Name</div>
-                    <div>Nguyen Khoi Nguyen</div>
-                </div>
                 <Divider className='bg-gray-400' />
                 <div className='flex'>
-                    <div className='min-w-[25%] font-semibold'>Owner Email</div>
-                    <div>khoinguyen123@gmail.com</div>
-                </div>
-                <Divider className='bg-gray-400' />
-                <div className='flex'>
-                    <div className='min-w-[25%] font-semibold'>Phone Number</div>
-                    <div>0934863248</div>
-                </div>
-                <Divider className='bg-gray-400' />
-                <div className='flex'>
-                    <div className='min-w-[25%] font-semibold'>Identification card</div>
-                    <div className='flex w-full gap-8'>
-                        <div className='flex-1'>
-                            ID Front
-                            <div className='h-[200px] rounded p-3 mt-2 border border-solid border-gray-500'>
-                                <img
-                                    src='https://hatinh.gov.vn/uploads/topics/16117075967123.jpg'
-                                    alt='idFront'
-                                    className='w-full h-full'
-                                />
-                            </div>
+                    <div className='min-w-[35%] font-semibold'>Hotel Photo</div>
+                    <div className='overflow-x-auto'>
+                        <div className='w-full flex items-center gap-5'>
+                            {previewImage?.map((image, index) => {
+                                return (
+                                    <div
+                                        className='w-[200px] h-[220px] flex-shrink-0 rounded overflow-hidden'
+                                        key={index}
+                                    >
+                                        <img src={image} alt='hotel' className='w-full h-full object-cover' />
+                                    </div>
+                                )
+                            })}
                         </div>
-                        <div className='flex-1'>
-                            ID Front
-                            <div className='p-3 h-[200px] rounded mt-2 border border-solid border-gray-500'>
-                                <img
-                                    src='https://static.cand.com.vn/Files/Image/phulu/2021/03/11/thumb_660_d2cb0712-aea1-4b37-bd7a-76a27ef461f0.jpg'
-                                    alt='idFront'
-                                    className='w-full h-full'
-                                />
-                            </div>
-                        </div>
+                    </div>
+                </div>
+                <Divider className='bg-gray-400' />
+                <div className='flex'>
+                    <div className='min-w-[35%] font-semibold'>Hotel Facilities</div>
+                    <div className='w-full'>
+                        <Checkbox.Group
+                            style={{ width: '70%' }}
+                            className='flex flex-col gap-[10px] relative'
+                            defaultValue={facilities}
+                        >
+                            <div className='absolute w-full h-full bg-gray-400 z-20 opacity-0'></div>
+                            <Row gutter={[10, 10]} className='items-center'>
+                                {data?.data.list.map((facility) => {
+                                    return facility.list.map((item) => {
+                                        const isHasFacility = facilities?.includes(item.facilityId)
+                                        if (isHasFacility) {
+                                            return (
+                                                <Col span={12} key={item.facilityId}>
+                                                    <Checkbox value={item.facilityId}>{item.facilityName}</Checkbox>
+                                                </Col>
+                                            )
+                                        }
+                                    })
+                                })}
+                            </Row>
+                        </Checkbox.Group>
+                    </div>
+                </div>
+                <Divider className='bg-gray-400' />
+                <div className='flex'>
+                    <div className='min-w-[35%] font-semibold'>Hotel Policy</div>
+                    <div className='flex flex-col gap-3'>
+                        <div>Check-in: {hotelPolicy?.checkInPolicy}</div>
+                        <div>Check-out: {hotelPolicy?.checkOutPolicy}</div>
+                        <div>Cancellation: {hotelPolicy?.cancellationPolicy}</div>
                     </div>
                 </div>
             </Card>
             <div className='mt-5 text-end'>
-                <Button type='default' onClick={prev} htmlType='submit' className='min-w-[150px] mr-5'>
+                <Button type='default' onClick={prev} className='min-w-[150px] mr-5'>
                     Previous
                 </Button>
-                <Button type='primary' onClick={handleCreateHotel} htmlType='submit' className='min-w-[150px]'>
+                <Button type='primary' onClick={handleCreateHotel} className='min-w-[150px]'>
                     Confirm and Send
                 </Button>
             </div>
-        </Form>
+        </div>
     )
 }

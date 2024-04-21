@@ -17,12 +17,15 @@ import { useState } from 'react'
 import { CITIES_LIST } from 'src/constants/CityList'
 import type { UploadFile, UploadProps } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
+import { useParams } from 'react-router-dom'
 
 export default function HotelDetail() {
     const [previewOpen, setPreviewOpen] = useState(false)
     const [previewImage, setPreviewImage] = useState('')
     const [previewTitle, setPreviewTitle] = useState('')
     const [fileList, setFileList] = useState<UploadFile[]>([])
+    const [form] = Form.useForm()
+    const { hotelId } = useParams()
 
     const handleCancel = () => setPreviewOpen(false)
 
@@ -35,7 +38,8 @@ export default function HotelDetail() {
         setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1))
     }
 
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    const handleChange: UploadProps['onChange'] = ({ fileList }) => {
+        const newFileList = fileList.filter((file) => file.status === 'done')
         setFileList(newFileList)
     }
 
@@ -54,7 +58,7 @@ export default function HotelDetail() {
     })
 
     return (
-        <Form className='p-7' layout='vertical' onFinish={() => {}}>
+        <Form form={form} className='p-7' layout='vertical' onFinish={() => {}}>
             <div className='flex gap-5'>
                 <Card className='w-[60%]'>
                     <h2>Hotel Information</h2>
@@ -121,23 +125,38 @@ export default function HotelDetail() {
                         <h2>Hotel Photo</h2>
                         <div className='text-gray-500'>Upload some images for your hotel</div>
                         <div className='mt-5'>
-                            <Upload
-                                action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
-                                listType='picture-card'
-                                fileList={fileList}
-                                maxCount={5}
-                                onPreview={handlePreview}
-                                onChange={handleChange}
-                                beforeUpload={(file) => {
-                                    const isCheckSize = file.size > 2097152
-                                    if (isCheckSize) {
-                                        message.error('File size limit is 2 MB')
-                                    }
-                                    return !isCheckSize || Upload.LIST_IGNORE
+                            <Form.Item
+                                name='photo'
+                                valuePropName='fileList'
+                                getValueFromEvent={(event) => {
+                                    return event.fileList
                                 }}
+                                rules={[{ required: true, message: 'Please upload least 1 image' }]}
                             >
-                                {fileList.length >= 5 ? null : uploadButton}
-                            </Upload>
+                                <Upload
+                                    // action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
+                                    listType='picture-card'
+                                    fileList={fileList}
+                                    accept='.jpg,.jpeg,.png'
+                                    maxCount={5}
+                                    onPreview={handlePreview}
+                                    onChange={handleChange}
+                                    customRequest={({ onSuccess }) => {
+                                        if (onSuccess) {
+                                            onSuccess('ok')
+                                        }
+                                    }}
+                                    beforeUpload={(file) => {
+                                        if (file.size < 2097152 && file.type.includes('image')) {
+                                            return true
+                                        }
+                                        message.error('File size limit is 2 MB and only accept image file type')
+                                        return Upload.LIST_IGNORE
+                                    }}
+                                >
+                                    {fileList.length >= 5 ? null : uploadButton}
+                                </Upload>
+                            </Form.Item>
                             <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
                                 <img alt='example' style={{ width: '100%' }} src={previewImage} />
                             </Modal>

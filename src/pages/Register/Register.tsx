@@ -1,40 +1,23 @@
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, DatePicker, Form, Input, InputNumber, Radio } from 'antd'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { ROUTES } from 'src/constants/Routes'
 import dayjs from 'dayjs'
-import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { RegisterFormType } from 'src/types/auth.type'
-import { useMutation } from '@tanstack/react-query'
-import authApi from 'src/apis/auth.api'
-import { toast } from 'react-toastify'
-import { isAxiosBadRequest } from 'src/utils/utils'
 import { omit } from 'lodash'
 import IdentityVerification from 'src/pages/Register/components/IdentityVerification'
 dayjs.extend(customParseFormat)
 
 export default function Register() {
     const [isRegister, setIsRegister] = useState(false)
-    const navigate = useNavigate()
-
-    const registerMutation = useMutation({
-        mutationFn: authApi.register
-    })
+    const [data, setData] = useState<Omit<RegisterFormType, 'confirmPassword'>>()
 
     const handleRegister = (data: RegisterFormType) => {
         const body = omit({ ...data, birthday: dayjs(data.birthday).format('YYYY-MM-DD') }, 'confirmPassword')
-        registerMutation.mutate(body, {
-            onError: (error) => {
-                if (isAxiosBadRequest(error)) {
-                    toast.error('The email that you entered is already in use!')
-                }
-            },
-            onSuccess: () => {
-                toast.success('Register successfully')
-                navigate(ROUTES.LOGIN)
-            }
-        })
+        setData(body)
+        setIsRegister(true)
     }
 
     return (
@@ -155,14 +138,7 @@ export default function Register() {
                                 suffix={<LockOutlined />}
                             />
                         </Form.Item>
-                        <Button
-                            type='primary'
-                            block
-                            htmlType='button'
-                            onClick={() => setIsRegister(true)}
-                            className='mt-3'
-                            size='large'
-                        >
+                        <Button type='primary' block htmlType='submit' className='mt-3' size='large'>
                             Next step
                         </Button>
                     </Form>
@@ -174,7 +150,9 @@ export default function Register() {
                     </div>
                 </>
             )}
-            {isRegister === true && <IdentityVerification setIsRegister={setIsRegister} />}
+            {isRegister === true && (
+                <IdentityVerification setIsRegister={setIsRegister} setData={setData} data={data} />
+            )}
         </div>
     )
 }

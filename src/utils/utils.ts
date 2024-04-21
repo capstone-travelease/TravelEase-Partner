@@ -1,4 +1,5 @@
 import { isAxiosError, AxiosError } from 'axios'
+import { ExpiredTokenResponse } from 'src/types/auth.type'
 
 export function isAxiosBadRequest(error: unknown): error is AxiosError<{ code: number; message: string }> {
     return isAxiosError(error) && error.response?.status === 400
@@ -8,8 +9,11 @@ export function isAxiosUnauthorized<T>(error: unknown): error is AxiosError<T> {
     return isAxiosError(error) && error.response?.status === 401
 }
 
+export function isAxiosExpiredTokenError<T>(error: unknown): error is AxiosError<T> {
+    return isAxiosUnauthorized<ExpiredTokenResponse>(error) && error.response?.data.message === 'EXPIRED_TOKEN'
+}
+
 export function checkStatusHotel(status: number) {
-    console.log(status)
     switch (status) {
         case 1:
             return {
