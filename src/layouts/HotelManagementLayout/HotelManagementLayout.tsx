@@ -3,12 +3,11 @@ import logoImage from 'src/assets/logo.png'
 import { ConfigProvider, Layout, Menu } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { Content } from 'antd/es/layout/layout'
-import { useEffect, useState } from 'react'
 import HotelOverview from 'src/pages/HotelOverview'
 import HotelDetail from 'src/pages/HotelDetail'
 import RoomManagement from 'src/pages/RoomManagement/pages/RoomManagement'
 import BookingManagment from 'src/pages/BookingManagement'
-import { useParams } from 'react-router-dom'
+import { useState } from 'react'
 
 export default function HotelManagementLayout() {
     const [tabs, setTabs] = useState('2')

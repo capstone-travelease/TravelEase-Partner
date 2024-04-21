@@ -17,7 +17,6 @@ import { useState } from 'react'
 import { CITIES_LIST } from 'src/constants/CityList'
 import type { UploadFile, UploadProps } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { useParams } from 'react-router-dom'
 
 export default function HotelDetail() {
     const [previewOpen, setPreviewOpen] = useState(false)
@@ -25,7 +24,6 @@ export default function HotelDetail() {
     const [previewTitle, setPreviewTitle] = useState('')
     const [fileList, setFileList] = useState<UploadFile[]>([])
     const [form] = Form.useForm()
-    const { hotelId } = useParams()
 
     const handleCancel = () => setPreviewOpen(false)
 
