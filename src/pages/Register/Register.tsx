@@ -1,5 +1,5 @@
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, DatePicker, Form, Input, InputNumber, Radio } from 'antd'
+import { Button, DatePicker, Form, Input, Radio } from 'antd'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { RegisterFormType } from 'src/types/auth.type'
 import { omit } from 'lodash'
 import IdentityVerification from 'src/pages/Register/components/IdentityVerification'
+import InputNumber from 'src/components/InputNumber'
 dayjs.extend(customParseFormat)
 
 export default function Register() {
@@ -49,20 +50,19 @@ export default function Register() {
                             />
                         </Form.Item>
                         <Form.Item
-                            hasFeedback
+                            className='w-full'
                             label='Phone'
                             name='phonenumber'
+                            hasFeedback
                             rules={[
-                                { required: true },
-                                { pattern: /^\d{10}$/, message: 'The phone number must least 10 number' }
+                                { required: true, message: 'Please enter hotel phone' },
+                                {
+                                    len: 10,
+                                    message: 'Phone number must be 10 characters'
+                                }
                             ]}
                         >
-                            <InputNumber
-                                size='large'
-                                placeholder='Enter your phone'
-                                className='border-2 w-full'
-                                suffix={<MailOutlined />}
-                            />
+                            <InputNumber className='border-2' max={10} placeholder='Enter your phone' />
                         </Form.Item>
                         <div className='flex  gap-4'>
                             <Form.Item

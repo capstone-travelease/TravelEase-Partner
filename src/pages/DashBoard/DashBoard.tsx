@@ -49,6 +49,7 @@ export default function DashBoard() {
                                 block
                                 onClick={() => navigate(`${ROUTES.HOTEL}/${hotel.hotelId}`)}
                                 disabled={checkStatusHotel(hotel.statusId).status}
+                                className='disabled:bg-[#AEAEAE] disabled:text-white'
                             >
                                 {checkStatusHotel(hotel.statusId).text}
                             </Button>

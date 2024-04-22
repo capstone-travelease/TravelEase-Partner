@@ -19,3 +19,22 @@ export type AddHotelResponse = {
     message: string
     hotelId: number
 }
+
+export type DetailHotelResponse = {
+    code: number
+    message: string
+    data: {
+        hotelId: number
+        hotelName: string
+        hotelAddress: string
+        hotelCity: string
+        hotelCountry: string
+        hotelNumber: string
+        hotelDescription: string
+        hotelEmail: string
+        hotelCheckIn: string
+        hotelCheckOut: string
+        hotelImage: string[]
+        hotelFacility: number[]
+    }
+}

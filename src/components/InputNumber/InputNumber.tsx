@@ -6,9 +6,10 @@ export interface InputNumberProps {
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
     value?: string
     max?: number
+    className?: string
 }
 
-export default function InputNumber({ placeholder, onChange, value = '', max }: InputNumberProps) {
+export default function InputNumber({ placeholder, onChange, value = '', max, className }: InputNumberProps) {
     const [localValue, setLocalValue] = useState<string>(value as string)
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,6 +27,7 @@ export default function InputNumber({ placeholder, onChange, value = '', max }: 
             placeholder={placeholder}
             value={value || localValue}
             onChange={handleChange}
+            className={className}
         />
     )
 }

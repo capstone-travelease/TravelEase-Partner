@@ -18,7 +18,7 @@ export type HotelDetailFormValue = {
     hotelName: string
     hotelAddress: string
     hotelCity: string
-    hotelCounty: string
+    hotelCountry: string
     hotelContactNumber: string
     hotelEmail: string
     hotelDescription: string

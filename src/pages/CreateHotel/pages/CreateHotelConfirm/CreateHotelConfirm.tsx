@@ -58,7 +58,7 @@ export default function CreateHotelConfirm({
                 <div className='flex'>
                     <div className='min-w-[35%] font-semibold'>Address</div>
                     <div>
-                        {hotelInfo?.hotelAddress}, {hotelInfo?.hotelCity}, {hotelInfo?.hotelCounty}
+                        {hotelInfo?.hotelAddress}, {hotelInfo?.hotelCity}, {hotelInfo?.hotelCountry}
                     </div>
                 </div>
                 <Divider className='bg-gray-400' />

@@ -36,7 +36,7 @@ export default function CreateHotelDetail({ onFinishHotelInfo, hotelInfo }: Prop
                 hotelEmail: hotelInfo.hotelEmail,
                 hotelAddress: hotelInfo.hotelAddress,
                 hotelCity: hotelInfo.hotelCity,
-                hotelCounty: hotelInfo.hotelCounty,
+                hotelCountry: hotelInfo.hotelCountry,
                 checkInTime: hotelInfo.checkInTime,
                 checkOutTime: hotelInfo.checkOutTime
             })
@@ -72,6 +72,7 @@ export default function CreateHotelDetail({ onFinishHotelInfo, hotelInfo }: Prop
                             <Input.TextArea
                                 showCount
                                 maxLength={200}
+                                size='large'
                                 autoSize={{ minRows: 2, maxRows: 6 }}
                                 placeholder='Enter hotel description'
                             />
@@ -135,7 +136,7 @@ export default function CreateHotelDetail({ onFinishHotelInfo, hotelInfo }: Prop
                             <Form.Item
                                 label='Country'
                                 hasFeedback
-                                name='hotelCounty'
+                                name='hotelCountry'
                                 initialValue='Việt Nam'
                                 className='w-full'
                             >
