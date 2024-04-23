@@ -8,7 +8,7 @@ import dayjs from 'dayjs'
 import { RegisterFormType } from 'src/types/auth.type'
 import { omit } from 'lodash'
 import IdentityVerification from 'src/pages/Register/components/IdentityVerification'
-import InputNumber from 'src/components/InputNumber'
+import InputNumberCustom from 'src/components/InputNumberCustom'
 dayjs.extend(customParseFormat)
 
 export default function Register() {
@@ -62,7 +62,7 @@ export default function Register() {
                                 }
                             ]}
                         >
-                            <InputNumber className='border-2' max={10} placeholder='Enter your phone' />
+                            <InputNumberCustom className='border-2' max={10} placeholder='Enter your phone' />
                         </Form.Item>
                         <div className='flex  gap-4'>
                             <Form.Item

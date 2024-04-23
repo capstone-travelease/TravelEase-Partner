@@ -1,4 +1,4 @@
-import { Button, Card, Checkbox, Col, Divider, Form, Input, Modal, Row, Select, Spin, Upload, message } from 'antd'
+import { Button, Card, Divider, Form, Input, Modal, Select, Spin, Upload, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { CITIES_LIST } from 'src/constants/CityList'
 import type { UploadFile, UploadProps } from 'antd'
@@ -6,11 +6,11 @@ import { PlusOutlined } from '@ant-design/icons'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import hotelApi from 'src/apis/hotel.api'
-import InputNumber from 'src/components/InputNumber'
-import facilitiesApi from 'src/apis/facilities.api'
 import { URL_IMAGE } from 'src/constants/AppConstants'
 import { omit } from 'lodash'
 import { toast } from 'react-toastify'
+import InputNumberCustom from 'src/components/InputNumberCustom'
+import Facilities from 'src/components/Facilities'
 
 const option = Array(24)
     .fill(0)
@@ -89,12 +89,6 @@ export default function HotelDetail() {
         }
     }, [data, form])
 
-    const getFacilityQuery = useQuery({
-        queryKey: ['facilities'],
-        queryFn: facilitiesApi.getFacilities,
-        staleTime: 1000 * 60
-    })
-
     const updateHotelMutation = useMutation({
         mutationFn: hotelApi.updateHotel
     })
@@ -138,7 +132,6 @@ export default function HotelDetail() {
             toast.success('Update hotel successfully')
             refetch()
         } catch (error) {
-            console.log(error)
             toast.error('Update hotel failed')
         } finally {
             setIsLoadingUpdate(false)
@@ -242,7 +235,7 @@ export default function HotelDetail() {
                                     }
                                 ]}
                             >
-                                <InputNumber max={10} placeholder='Enter your phone' />
+                                <InputNumberCustom max={10} placeholder='Enter your phone' />
                             </Form.Item>
                         </div>
                         <Divider className='bg-gray-400' />
@@ -321,22 +314,7 @@ export default function HotelDetail() {
                                         }
                                     ]}
                                 >
-                                    <Checkbox.Group style={{ width: '100%' }}>
-                                        {getFacilityQuery.data?.data.list.map((facility, index) => (
-                                            <div key={index} className='w-full'>
-                                                <h3 className='w-full mt-5'>{facility.facilityType}</h3>
-                                                <Row gutter={[10, 10]} align='middle'>
-                                                    {facility.list.map((item) => (
-                                                        <Col span={6} key={item.facilityId}>
-                                                            <Checkbox value={item.facilityId}>
-                                                                {item.facilityName}
-                                                            </Checkbox>
-                                                        </Col>
-                                                    ))}
-                                                </Row>
-                                            </div>
-                                        ))}
-                                    </Checkbox.Group>
+                                    <Facilities />
                                 </Form.Item>
                             </div>
                         </div>

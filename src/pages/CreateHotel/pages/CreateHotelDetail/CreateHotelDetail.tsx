@@ -1,6 +1,6 @@
 import { HotelDetailFormValue } from 'src/pages/CreateHotel/layouts/CreateHotelLayout/CreateHotelLayout'
 import { Button, Card, Divider, Form, Input, Select } from 'antd'
-import InputNumber from 'src/components/InputNumber'
+import InputNumber from 'src/components/InputNumberCustom'
 import { CITIES_LIST } from 'src/constants/CityList'
 import { useEffect } from 'react'
 

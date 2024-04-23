@@ -1,80 +1,85 @@
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
+import { useQuery } from '@tanstack/react-query'
 import { Badge, Button, Input, Space, Table } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
+import roomApi from 'src/apis/room.api'
+import defaultImage from 'src/assets/defaultImage.svg'
+import { formatCurrency } from 'src/utils/utils'
 
 interface DataType {
     key: string | number
-    id: number | string
-    image: string
-    name: string
-    quantity: number | string
+    roomId: number | string
+    roomImage: string
+    roomName: string
+    roomQuantity: number
     roomPrice: number
-    status: string
-    type: string
-}
-
-const data: DataType[] = []
-for (let i = 1; i <= 20; i++) {
-    data.push({
-        key: i,
-        id: i,
-        image: 'https://thumbs.dreamstime.com/b/hotel-bed-room-21064950.jpg',
-        name: 'John Brown',
-        roomPrice: 100,
-        quantity: `${i + 10}`,
-        status: 'Active',
-        type: 'Luxury'
-    })
+    status: boolean
+    roomType: string
 }
 
 const columns = [
     {
-        key: 'id',
+        key: 'roomId',
         title: 'Room ID',
-        dataIndex: 'id',
+        dataIndex: 'roomId',
         width: 120
     },
     {
-        key: 'image',
+        key: 'roomImage',
         title: 'Image',
+        width: 100,
         render: (record: DataType) => (
             <div className='w-14 h-14 rounded overflow-hidden relative'>
-                <img src={record.image} alt='' className='w-full h-full absolute object-cover' />
+                <img src={record.roomImage || defaultImage} alt='' className='w-full h-full absolute object-cover' />
             </div>
         )
     },
     {
-        key: 'name',
+        key: 'roomName',
         title: 'Room Name',
-        dataIndex: 'name'
+        dataIndex: 'roomName'
     },
     {
         key: 'roomPrice',
         title: 'Room Price',
-        dataIndex: 'roomPrice'
+        render: (record: DataType) => <div>{formatCurrency(record.roomPrice)}</div>
     },
     {
         key: 'status',
         title: 'Status',
-        render: (record: DataType) => <Badge status='success' text={record.status} />
+        render: (record: DataType) => {
+            const isStatus = record.status === true ? 'success' : 'error'
+            const statusText = record.status === true ? 'Active' : 'Close'
+            return <Badge status={isStatus} text={statusText} />
+        }
     },
     {
-        key: 'quantity',
+        key: 'roomQuantity',
         title: 'Quantity',
-        dataIndex: 'quantity'
+        dataIndex: 'roomQuantity'
     },
     {
-        key: 'type',
+        key: 'roomType',
         title: 'Room Type',
-        dataIndex: 'type'
+        dataIndex: 'roomType'
     },
     {
         key: 'action',
         title: 'Action',
         render: (record: DataType) => (
             <Space size={10}>
-                <Button type='primary' onClick={() => console.log(record.id)} size='middle' icon={<EditOutlined />} />
-                <Button type='default' onClick={() => console.log(record.id)} size='middle' icon={<DeleteOutlined />} />
+                <Button
+                    type='primary'
+                    onClick={() => console.log(record.roomId)}
+                    size='middle'
+                    icon={<EditOutlined />}
+                />
+                <Button
+                    type='default'
+                    onClick={() => console.log(record.roomId)}
+                    size='middle'
+                    icon={<DeleteOutlined />}
+                />
             </Space>
         )
     }
@@ -82,6 +87,12 @@ const columns = [
 export default function RoomManagement() {
     const navigate = useNavigate()
     const { hotelId } = useParams()
+
+    const { data, isLoading } = useQuery({
+        queryKey: ['roomList', hotelId],
+        queryFn: () => roomApi.getRoomList(Number(hotelId))
+    })
+
     return (
         <div className='p-7'>
             <div className='mb-5 items-center flex justify-between'>
@@ -99,10 +110,20 @@ export default function RoomManagement() {
             </div>
             <Table
                 size='large'
-                pagination={{ position: ['none', 'bottomLeft'] }}
+                pagination={{ position: ['none', 'bottomCenter'] }}
                 columns={columns}
-                dataSource={data}
+                dataSource={data?.data.list.map((item) => ({
+                    key: item.roomId,
+                    roomId: item.roomId,
+                    roomImage: item.imageUrl[0],
+                    roomName: item.roomName,
+                    roomQuantity: item.roomQuantity,
+                    roomPrice: item.roomPrice,
+                    status: item.status,
+                    roomType: item.roomType
+                }))}
                 tableLayout='fixed'
+                loading={isLoading}
             />
         </div>
     )
