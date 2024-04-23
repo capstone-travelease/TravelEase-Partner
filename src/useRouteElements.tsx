@@ -9,6 +9,11 @@ import DashBoardLayout from './layouts/DashBoardLayout'
 import DashBoard from './pages/DashBoard'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
+import HotelOverview from 'src/pages/HotelOverview'
+import AddRoom from 'src/pages/AddRoom'
+import HotelDetail from 'src/pages/HotelDetail'
+import RoomManagement from 'src/pages/RoomManagement'
+import BookingManagment from 'src/pages/BookingManagement'
 
 const ProtectedRoutes = () => {
     const { isAuthenticated } = useContext(AppContext)
@@ -78,7 +83,51 @@ export default function useRouteElements() {
                 },
                 {
                     path: `${ROUTES.HOTEL}/:hotelId`,
-                    element: <HotelManagementLayout />
+                    element: (
+                        <HotelManagementLayout>
+                            <HotelOverview />
+                        </HotelManagementLayout>
+                    )
+                },
+                {
+                    path: ROUTES.HOTEL_OVERVIEW,
+                    element: (
+                        <HotelManagementLayout>
+                            <HotelOverview />
+                        </HotelManagementLayout>
+                    )
+                },
+                {
+                    path: ROUTES.HOTEL_DETAIL,
+                    element: (
+                        <HotelManagementLayout>
+                            <HotelDetail />
+                        </HotelManagementLayout>
+                    )
+                },
+                {
+                    path: ROUTES.ROOM_MANAGEMENT,
+                    element: (
+                        <HotelManagementLayout>
+                            <RoomManagement />
+                        </HotelManagementLayout>
+                    )
+                },
+                {
+                    path: ROUTES.BOOKING_MANAGEMENT,
+                    element: (
+                        <HotelManagementLayout>
+                            <BookingManagment />
+                        </HotelManagementLayout>
+                    )
+                },
+                {
+                    path: ROUTES.ADD_ROOM,
+                    element: (
+                        <HotelManagementLayout>
+                            <AddRoom />
+                        </HotelManagementLayout>
+                    )
                 }
             ]
         }

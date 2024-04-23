@@ -1,5 +1,6 @@
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
 import { Badge, Button, Input, Space, Table } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom'
 
 interface DataType {
     key: string | number
@@ -79,13 +80,19 @@ const columns = [
     }
 ]
 export default function RoomManagement() {
+    const navigate = useNavigate()
+    const { hotelId } = useParams()
     return (
         <div className='p-7'>
             <div className='mb-5 items-center flex justify-between'>
                 <h2>Room List</h2>
                 <div className='flex items-center gap-5'>
                     <Input placeholder='Search Room' prefix={<SearchOutlined />} />
-                    <Button type='primary' icon={<PlusCircleOutlined />}>
+                    <Button
+                        type='primary'
+                        onClick={() => navigate(`/hotel/${hotelId}/add-room`)}
+                        icon={<PlusCircleOutlined />}
+                    >
                         Add Room
                     </Button>
                 </div>

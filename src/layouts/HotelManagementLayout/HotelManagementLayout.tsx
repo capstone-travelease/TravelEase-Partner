@@ -3,15 +3,18 @@ import logoImage from 'src/assets/logo.png'
 import { ConfigProvider, Layout, Menu } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { Content } from 'antd/es/layout/layout'
-import HotelOverview from 'src/pages/HotelOverview'
-import HotelDetail from 'src/pages/HotelDetail'
-import RoomManagement from 'src/pages/RoomManagement/pages/RoomManagement'
-import BookingManagment from 'src/pages/BookingManagement'
-import { useState } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-export default function HotelManagementLayout() {
-    const [tabs, setTabs] = useState('2')
+interface HotelManagementLayoutProps {
+    children?: React.ReactNode
+}
 
+export default function HotelManagementLayout({ children }: HotelManagementLayoutProps) {
+    const { hotelId } = useParams()
+    const { pathname } = useLocation()
+    const tab = pathname.split('/')[3] || 'overview'
+
+    const navigate = useNavigate()
     return (
         <div className='bg-[#F5F5F5] min-h-screen'>
             <ConfigProvider
@@ -44,35 +47,31 @@ export default function HotelManagementLayout() {
                         <Menu
                             mode='inline'
                             inlineIndent={24}
-                            defaultSelectedKeys={[tabs]}
+                            defaultSelectedKeys={[tab]}
                             onClick={(info) => {
-                                setTabs(info.key)
+                                navigate(`/hotel/${hotelId}/${info.key}`)
                             }}
                             className='bg-[#180101] !border-none text-base'
                             items={[
                                 {
                                     label: 'Overview',
-                                    key: '1'
+                                    key: 'overview'
                                 },
                                 {
                                     label: 'Hotel Management',
-                                    key: '2'
+                                    key: 'hotel-detail'
                                 },
                                 {
                                     label: 'Room Management',
-                                    key: '3'
-                                },
-                                {
-                                    label: 'Falicities',
-                                    key: '4'
+                                    key: 'room-management'
                                 },
                                 {
                                     label: 'Booking Management',
-                                    key: '5'
+                                    key: 'booking-management'
                                 },
                                 {
                                     label: 'Feedback',
-                                    key: '6'
+                                    key: 'feedback'
                                 }
                             ]}
                         />
@@ -80,10 +79,7 @@ export default function HotelManagementLayout() {
                     <Content className='ml-[250px]'>
                         <div>
                             <Header logo={false} />
-                            {tabs === '1' && <HotelOverview />}
-                            {tabs === '2' && <HotelDetail />}
-                            {tabs === '3' && <RoomManagement />}
-                            {tabs === '5' && <BookingManagment />}
+                            {children}
                         </div>
                     </Content>
                 </Layout>

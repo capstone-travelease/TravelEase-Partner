@@ -57,9 +57,9 @@ export default function HotelDetail() {
     const [fileList, setFileList] = useState<UploadFile[]>([])
     const [form] = Form.useForm<HotelDetailFormValue>()
     const { hotelId } = useParams()
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
 
-    const { data, refetch } = useQuery({
+    const { data, refetch, isLoading } = useQuery({
         queryKey: ['getDetailHotel', hotelId],
         queryFn: () => hotelApi.getDetailHotel(hotelId as string)
     })
@@ -104,7 +104,6 @@ export default function HotelDetail() {
     })
 
     const handlePreview = async (file: UploadFile) => {
-        console.log(file)
         const urlImage = file.url ? file.url : URL.createObjectURL(file.originFileObj as File)
         setPreviewImage(urlImage)
         setPreviewOpen(true)
@@ -120,7 +119,7 @@ export default function HotelDetail() {
     const onFinish = async (values: HotelDetailFormValue) => {
         try {
             const hotelData = omit(values, 'photo')
-            setIsLoading(true)
+            setIsLoadingUpdate(true)
             await updateHotelMutation.mutateAsync({ hotelId: hotelId as string, body: hotelData })
             const newPhotoData = values.photo.filter((file) => file.originFileObj as File)
             const urlPath = values.photo
@@ -133,8 +132,7 @@ export default function HotelDetail() {
                     newPhotoData.forEach((file) => {
                         form.append('image', file.originFileObj as File)
                     })
-                urlPath.length !== data?.data.data.hotelImage.length &&
-                    form.append('data', new Blob([JSON.stringify(urlPath)], { type: 'application/json' }))
+                form.append('data', new Blob([JSON.stringify(urlPath)], { type: 'application/json' }))
                 await updateImageMutation.mutateAsync({ hotelId: Number(hotelId), formData: form })
             }
             toast.success('Update hotel successfully')
@@ -143,13 +141,14 @@ export default function HotelDetail() {
             console.log(error)
             toast.error('Update hotel failed')
         } finally {
-            setIsLoading(false)
+            setIsLoadingUpdate(false)
         }
     }
 
     return (
         <Form form={form} className='relative' layout='vertical' requiredMark={false} onFinish={onFinish}>
-            <Spin spinning={isLoading} />
+            <Spin spinning={isLoadingUpdate} fullscreen size='large' />
+            <Spin spinning={isLoading} fullscreen size='large' />
             <div className='flex flex-col gap-5 p-7 pb-0'>
                 <Card>
                     <h2>Hotel Photo</h2>
