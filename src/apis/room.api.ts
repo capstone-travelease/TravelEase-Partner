@@ -10,7 +10,7 @@ const roomApi = {
         return http.get<{ code: number; message: string; list: RoomType[] }>('/room-management/rooms/types')
     },
     getRoomList: (hotelId: number) => {
-        return http.get<RoomListResponse>(`/rooms?hotelId=${hotelId}`)
+        return http.get<RoomListResponse>(`/room-management/rooms?hotelId=${hotelId}`)
     }
 }
 
