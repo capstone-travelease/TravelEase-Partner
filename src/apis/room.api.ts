@@ -4,10 +4,10 @@ import http from 'src/utils/http'
 
 const roomApi = {
     addRoom: (body: RoomFormValues & { hotelId: number }) => {
-        return http.post<{ code: number; message: string; roomId: number }>('/rooms', body)
+        return http.post<{ code: number; message: string; roomId: number }>('/room-management/rooms', body)
     },
     getRoomType: () => {
-        return http.get<{ code: number; message: string; list: RoomType[] }>('/rooms/types')
+        return http.get<{ code: number; message: string; list: RoomType[] }>('/room-management/rooms/types')
     },
     getRoomList: (hotelId: number) => {
         return http.get<RoomListResponse>(`/rooms?hotelId=${hotelId}`)

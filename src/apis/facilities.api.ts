@@ -3,7 +3,7 @@ import http from 'src/utils/http'
 
 const facilitiesApi = {
     getFacilities: () => {
-        return http.get<FacilityListType>('/api/facilites')
+        return http.get<FacilityListType>('/hotel-management/facilites')
     }
 }
 
