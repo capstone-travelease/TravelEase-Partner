@@ -42,7 +42,7 @@ export type RoomDetailResponse = {
     roomDescription: string
     roomSize: string
     roomBedQuantity: number
-    room_Capacity: number
+    roomCapacity: number
     facilities: number[]
     imagePath: string[]
 }

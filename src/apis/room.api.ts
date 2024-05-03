@@ -1,5 +1,5 @@
 import { RoomFormValues } from 'src/pages/AddRoom/AddRoom'
-import { RoomDetailResponse, RoomListResponse, RoomType } from 'src/types/room.type'
+import { RoomDetailResponse, RoomListResponse, RoomType, UpdateRoomFormValues } from 'src/types/room.type'
 import http from 'src/utils/http'
 
 const roomApi = {
@@ -16,6 +16,9 @@ const roomApi = {
         return http.get<{ code: number; message: string; data: RoomDetailResponse }>(
             `/room-management/rooms/detail/${roomId}`
         )
+    },
+    updateRoom: (body: UpdateRoomFormValues) => {
+        return http.put<{ code: number; message: string }>(`/room-management/rooms`, body)
     }
 }
 

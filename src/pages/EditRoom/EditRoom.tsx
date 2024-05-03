@@ -1,11 +1,12 @@
 import { UserOutlined } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
-import { Button, Card, Divider, Form, Input, InputNumber, Select, Spin } from 'antd'
-import { useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { Button, Card, Divider, Form, Input, InputNumber, Select, Spin, Switch } from 'antd'
+import { omit } from 'lodash'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import roomApi from 'src/apis/room.api'
 import Facilities from 'src/components/Facilities'
-import { UpdateRoomFormValues } from 'src/types/room.type'
 
 export type RoomFormValues = {
     roomName: string
@@ -17,11 +18,14 @@ export type RoomFormValues = {
     roomBedQuantity: number
     roomCapacity: number
     roomFacilites: number[]
+    roomStatus: boolean
 }
 
 export default function EditRoom() {
     const { roomId, hotelId } = useParams()
-    const [form] = Form.useForm()
+    const [form] = Form.useForm<RoomFormValues>()
+    const [loadingUpdate, setLoadingUpdate] = useState(false)
+    const navigate = useNavigate()
 
     const { data, isLoading } = useQuery({
         queryKey: ['roomDetail', roomId],
@@ -38,11 +42,16 @@ export default function EditRoom() {
                 roomDescription: data.data.data.roomDescription,
                 roomSize: Number(data.data.data.roomSize.replace('sqm', '')),
                 roomBedQuantity: data.data.data.roomBedQuantity,
-                roomCapacity: data.data.data.room_Capacity,
-                roomFacilites: data.data.data.facilities
+                roomCapacity: data.data.data.roomCapacity,
+                roomFacilites: data.data.data.facilities,
+                roomStatus: data.data.data.roomStatus
             })
         }
     }, [data, form])
+
+    const updateRoomMutation = useMutation({
+        mutationFn: roomApi.updateRoom
+    })
 
     const roomTypesQuery = useQuery({
         queryKey: ['roomTypes'],
@@ -54,14 +63,35 @@ export default function EditRoom() {
         label: roomType.room_type_name
     }))
 
-    const handleSubmit = async (values: UpdateRoomFormValues) => {
-        console.log(values)
+    const handleSubmit = async (values: RoomFormValues) => {
+        try {
+            setLoadingUpdate(true)
+            const body = omit(
+                {
+                    ...values,
+                    roomId: Number(roomId),
+                    facilities: values.roomFacilites,
+                    roomSize: values.roomSize.toString()
+                },
+                'roomFacilites'
+            )
+            console.log(body)
+            await updateRoomMutation.mutateAsync(body)
+            toast.success('Update room successfully')
+            navigate(`/hotel/${hotelId}/room-management`)
+        } catch (error) {
+            console.log(error)
+            toast.error('Update room failed')
+        } finally {
+            setLoadingUpdate(false)
+        }
     }
 
     return (
         <div>
             <Form form={form} layout='vertical' requiredMark={false} onFinish={handleSubmit}>
                 <Spin spinning={isLoading} fullscreen />
+                <Spin spinning={loadingUpdate} fullscreen />
                 <div className='p-7 pb-0 flex flex-col gap-5'>
                     <Card>
                         <h2>Room Photo</h2>
@@ -109,7 +139,7 @@ export default function EditRoom() {
                         </div>
                     </Card>
                     <Card className='flex-grow'>
-                        <h2>Create room</h2>
+                        <h2>Room Detail</h2>
                         <div className='text-gray-500'>Room detail information</div>
                         <div className='mt-5'>
                             <div className='flex'>
@@ -270,6 +300,13 @@ export default function EditRoom() {
                                         size='large'
                                         options={roomTypesOption}
                                     />
+                                </Form.Item>
+                            </div>
+                            <Divider className='bg-gray-400' />
+                            <div className='flex'>
+                                <div className='min-w-[25%]'>Room Status</div>
+                                <Form.Item name='roomStatus' valuePropName='checked'>
+                                    <Switch checkedChildren='Active' unCheckedChildren='Close' />
                                 </Form.Item>
                             </div>
                             <Divider className='bg-gray-400' />
