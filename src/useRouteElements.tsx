@@ -14,6 +14,7 @@ import AddRoom from 'src/pages/AddRoom'
 import HotelDetail from 'src/pages/HotelDetail'
 import RoomManagement from 'src/pages/RoomManagement'
 import BookingManagment from 'src/pages/BookingManagement'
+import EditRoom from 'src/pages/EditRoom'
 
 const ProtectedRoutes = () => {
     const { isAuthenticated } = useContext(AppContext)
@@ -126,6 +127,14 @@ export default function useRouteElements() {
                     element: (
                         <HotelManagementLayout>
                             <AddRoom />
+                        </HotelManagementLayout>
+                    )
+                },
+                {
+                    path: ROUTES.EDIT_ROOM,
+                    element: (
+                        <HotelManagementLayout>
+                            <EditRoom />
                         </HotelManagementLayout>
                     )
                 }

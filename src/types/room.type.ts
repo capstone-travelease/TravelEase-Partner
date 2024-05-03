@@ -17,3 +17,32 @@ export type RoomListResponse = {
     total: number
     message: string
 }
+
+export type UpdateRoomFormValues = {
+    roomId: number
+    roomName: string
+    roomStatus: boolean
+    roomPrice: number
+    roomType: number
+    roomQuantity: number
+    roomDescription: string
+    roomSize: string
+    roomBedQuantity: number
+    roomCapacity: number
+    facilities: number[]
+}
+
+export type RoomDetailResponse = {
+    roomId: number
+    roomName: string
+    roomType: number
+    roomStatus: boolean
+    roomPrice: number
+    roomQuantity: number
+    roomDescription: string
+    roomSize: string
+    roomBedQuantity: number
+    room_Capacity: number
+    facilities: number[]
+    imagePath: string[]
+}

@@ -10,7 +10,7 @@ class Http {
     constructor() {
         this.accessToken = getAccessToken()
         this.instance = axios.create({
-            baseURL: 'https://www.capstone-partner-api.com/partner',
+            baseURL: 'https://www.capstone-api-partner.online/partner',
             timeout: 10000,
             headers: {
                 'Content-Type': 'application/json'

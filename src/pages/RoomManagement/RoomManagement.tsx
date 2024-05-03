@@ -1,7 +1,7 @@
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Badge, Button, Input, Space, Table } from 'antd'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import roomApi from 'src/apis/room.api'
 import defaultImage from 'src/assets/defaultImage.svg'
 import { formatCurrency } from 'src/utils/utils'
@@ -15,6 +15,7 @@ interface DataType {
     roomPrice: number
     status: boolean
     roomType: string
+    hotelId: string
 }
 
 const columns = [
@@ -41,7 +42,7 @@ const columns = [
     },
     {
         key: 'roomPrice',
-        title: 'Room Price',
+        title: 'Room Price (VNĐ)',
         render: (record: DataType) => <div>{formatCurrency(record.roomPrice)}</div>
     },
     {
@@ -66,22 +67,21 @@ const columns = [
     {
         key: 'action',
         title: 'Action',
-        render: (record: DataType) => (
-            <Space size={10}>
-                <Button
-                    type='primary'
-                    onClick={() => console.log(record.roomId)}
-                    size='middle'
-                    icon={<EditOutlined />}
-                />
-                <Button
-                    type='default'
-                    onClick={() => console.log(record.roomId)}
-                    size='middle'
-                    icon={<DeleteOutlined />}
-                />
-            </Space>
-        )
+        render: (record: DataType) => {
+            return (
+                <Space size={10}>
+                    <Link to={`/hotel/${record.hotelId}/edit-room/${record.roomId}`}>
+                        <Button type='primary' size='middle' icon={<EditOutlined />} />
+                    </Link>
+                    <Button
+                        type='default'
+                        onClick={() => console.log(record.roomId)}
+                        size='middle'
+                        icon={<DeleteOutlined />}
+                    />
+                </Space>
+            )
+        }
     }
 ]
 export default function RoomManagement() {
@@ -120,9 +120,10 @@ export default function RoomManagement() {
                     roomQuantity: item.roomQuantity,
                     roomPrice: item.roomPrice,
                     status: item.status,
-                    roomType: item.roomType
+                    roomType: item.roomType,
+                    hotelId: hotelId
                 }))}
-                tableLayout='fixed'
+                tableLayout='auto'
                 loading={isLoading}
             />
         </div>
