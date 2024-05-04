@@ -1,6 +1,21 @@
-import { UserOutlined } from '@ant-design/icons'
+import { PlusOutlined, UserOutlined } from '@ant-design/icons'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Button, Card, Divider, Form, Input, InputNumber, Select, Spin } from 'antd'
+import {
+    Button,
+    Card,
+    Divider,
+    Form,
+    Input,
+    InputNumber,
+    Modal,
+    Select,
+    Spin,
+    Upload,
+    UploadFile,
+    UploadProps,
+    message
+} from 'antd'
+import { omit } from 'lodash'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -19,10 +34,21 @@ export type RoomFormValues = {
     roomFacilites: number[]
 }
 
+const uploadButton = (
+    <button style={{ border: 0, background: 'none' }} type='button'>
+        <PlusOutlined />
+        <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+)
+
 export default function AddRoom() {
     const { hotelId } = useParams()
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
+    const [previewOpen, setPreviewOpen] = useState(false)
+    const [previewImage, setPreviewImage] = useState('')
+    const [previewTitle, setPreviewTitle] = useState('')
+    const [fileList, setFileList] = useState<UploadFile[]>([])
 
     const roomTypesQuery = useQuery({
         queryKey: ['roomTypes'],
@@ -37,16 +63,32 @@ export default function AddRoom() {
         mutationFn: roomApi.addRoom
     })
 
+    const handlePreview = async (file: UploadFile) => {
+        const urlImage = file.url ? file.url : URL.createObjectURL(file.originFileObj as File)
+        setPreviewImage(urlImage)
+        setPreviewOpen(true)
+        setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1))
+    }
+    const handleCancel = () => setPreviewOpen(false)
+
+    const handleChange: UploadProps['onChange'] = ({ fileList }) => {
+        const newFileList = fileList.filter((file) => file.status === 'done')
+        setFileList(newFileList)
+    }
+
     const handleSubmit = async (values: RoomFormValues) => {
         try {
-            const body = {
-                ...values,
-                hotelId: Number(hotelId),
-                roomSize: values.roomSize + ' m²'
-            }
-            console.log(body)
+            const hotelBody = omit(
+                {
+                    ...values,
+                    hotelId: Number(hotelId),
+                    roomSize: values.roomSize.toString()
+                },
+                'photo'
+            )
+            console.log(hotelBody)
             setIsLoading(true)
-            await addRoomMutation.mutateAsync(body)
+            await addRoomMutation.mutateAsync(hotelBody)
             toast.success('Create room successfully')
             navigate(`/hotel/${hotelId}/room-management`)
         } catch (error) {
@@ -65,7 +107,7 @@ export default function AddRoom() {
                         <h2>Room Photo</h2>
                         <div className='text-gray-500'>Upload some images for your room</div>
                         <div className='mt-5'>
-                            {/* <Form.Item
+                            <Form.Item
                                 name='photo'
                                 valuePropName='fileList'
                                 getValueFromEvent={(event) => {
@@ -74,7 +116,6 @@ export default function AddRoom() {
                                 rules={[{ required: true, message: 'Please upload least 1 image' }]}
                             >
                                 <Upload
-                                    // action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
                                     listType='picture-card'
                                     fileList={fileList}
                                     accept='.jpg,.jpeg,.png'
@@ -103,7 +144,7 @@ export default function AddRoom() {
                             <div className='flex'>
                                 <div className='text-red-500 mr-2'>*Note: </div>
                                 Maximum 5 photos and file size limit is 2 MB
-                            </div> */}
+                            </div>
                         </div>
                     </Card>
                     <Card className='flex-grow'>

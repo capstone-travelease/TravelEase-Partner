@@ -4,12 +4,13 @@ import { Badge, Button, Input, Space, Table } from 'antd'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import roomApi from 'src/apis/room.api'
 import defaultImage from 'src/assets/defaultImage.svg'
+import { URL_IMAGE } from 'src/constants/AppConstants'
 import { formatCurrency } from 'src/utils/utils'
 
 interface DataType {
     key: string | number
     roomId: number | string
-    roomImage: string
+    roomImage: string[]
     roomName: string
     roomQuantity: number
     roomPrice: number
@@ -31,7 +32,11 @@ const columns = [
         width: 100,
         render: (record: DataType) => (
             <div className='w-14 h-14 rounded overflow-hidden relative'>
-                <img src={record.roomImage || defaultImage} alt='' className='w-full h-full absolute object-cover' />
+                <img
+                    src={record.roomImage[0] ? `${URL_IMAGE}/${record.roomImage[0]}` : defaultImage}
+                    alt=''
+                    className='w-full h-full absolute object-cover'
+                />
             </div>
         )
     },
@@ -115,7 +120,7 @@ export default function RoomManagement() {
                 dataSource={data?.data.list.map((item) => ({
                     key: item.roomId,
                     roomId: item.roomId,
-                    roomImage: item.imageUrl[0],
+                    roomImage: item.imageUrl,
                     roomName: item.roomName,
                     roomQuantity: item.roomQuantity,
                     roomPrice: item.roomPrice,

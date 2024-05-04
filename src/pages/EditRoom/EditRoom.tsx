@@ -1,6 +1,21 @@
-import { UserOutlined } from '@ant-design/icons'
+import { PlusOutlined, UserOutlined } from '@ant-design/icons'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Button, Card, Divider, Form, Input, InputNumber, Select, Spin, Switch } from 'antd'
+import {
+    Button,
+    Card,
+    Divider,
+    Form,
+    Input,
+    InputNumber,
+    Modal,
+    Select,
+    Spin,
+    Switch,
+    Upload,
+    UploadFile,
+    UploadProps,
+    message
+} from 'antd'
 import { omit } from 'lodash'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -21,10 +36,21 @@ export type RoomFormValues = {
     roomStatus: boolean
 }
 
+const uploadButton = (
+    <button style={{ border: 0, background: 'none' }} type='button'>
+        <PlusOutlined />
+        <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+)
+
 export default function EditRoom() {
     const { roomId, hotelId } = useParams()
     const [form] = Form.useForm<RoomFormValues>()
     const [loadingUpdate, setLoadingUpdate] = useState(false)
+    const [previewOpen, setPreviewOpen] = useState(false)
+    const [previewImage, setPreviewImage] = useState('')
+    const [previewTitle, setPreviewTitle] = useState('')
+    const [fileList, setFileList] = useState<UploadFile[]>([])
     const navigate = useNavigate()
 
     const { data, isLoading } = useQuery({
@@ -63,6 +89,19 @@ export default function EditRoom() {
         label: roomType.room_type_name
     }))
 
+    const handlePreview = async (file: UploadFile) => {
+        const urlImage = file.url ? file.url : URL.createObjectURL(file.originFileObj as File)
+        setPreviewImage(urlImage)
+        setPreviewOpen(true)
+        setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1))
+    }
+    const handleCancel = () => setPreviewOpen(false)
+
+    const handleChange: UploadProps['onChange'] = ({ fileList }) => {
+        const newFileList = fileList.filter((file) => file.status === 'done')
+        setFileList(newFileList)
+    }
+
     const handleSubmit = async (values: RoomFormValues) => {
         try {
             setLoadingUpdate(true)
@@ -76,6 +115,7 @@ export default function EditRoom() {
                 'roomFacilites'
             )
             console.log(body)
+            console.log(fileList)
             await updateRoomMutation.mutateAsync(body)
             toast.success('Update room successfully')
             navigate(`/hotel/${hotelId}/room-management`)
@@ -97,7 +137,7 @@ export default function EditRoom() {
                         <h2>Room Photo</h2>
                         <div className='text-gray-500'>Upload some images for your room</div>
                         <div className='mt-5'>
-                            {/* <Form.Item
+                            <Form.Item
                                 name='photo'
                                 valuePropName='fileList'
                                 getValueFromEvent={(event) => {
@@ -106,7 +146,6 @@ export default function EditRoom() {
                                 rules={[{ required: true, message: 'Please upload least 1 image' }]}
                             >
                                 <Upload
-                                    // action='https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188'
                                     listType='picture-card'
                                     fileList={fileList}
                                     accept='.jpg,.jpeg,.png'
@@ -135,7 +174,7 @@ export default function EditRoom() {
                             <div className='flex'>
                                 <div className='text-red-500 mr-2'>*Note: </div>
                                 Maximum 5 photos and file size limit is 2 MB
-                            </div> */}
+                            </div>
                         </div>
                     </Card>
                     <Card className='flex-grow'>
