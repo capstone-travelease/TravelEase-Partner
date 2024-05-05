@@ -22,6 +22,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import roomApi from 'src/apis/room.api'
 import Facilities from 'src/components/Facilities'
+import { URL_IMAGE } from 'src/constants/AppConstants'
 
 export type RoomFormValues = {
     roomName: string
@@ -34,6 +35,7 @@ export type RoomFormValues = {
     roomCapacity: number
     roomFacilites: number[]
     roomStatus: boolean
+    photo: UploadFile[]
 }
 
 const uploadButton = (
@@ -70,13 +72,25 @@ export default function EditRoom() {
                 roomBedQuantity: data.data.data.roomBedQuantity,
                 roomCapacity: data.data.data.roomCapacity,
                 roomFacilites: data.data.data.facilities,
-                roomStatus: data.data.data.roomStatus
+                roomStatus: data.data.data.roomStatus,
+                photo: data.data.data.imagePath.map((url) => {
+                    return {
+                        uid: `${url} + ${Math.random()}`,
+                        name: url.substring(url.lastIndexOf('/') + 1),
+                        status: 'done',
+                        url: `${URL_IMAGE}${url}`
+                    }
+                })
             })
         }
     }, [data, form])
 
     const updateRoomMutation = useMutation({
         mutationFn: roomApi.updateRoom
+    })
+
+    const updateImageMutation = useMutation({
+        mutationFn: roomApi.updateRoomImage
     })
 
     const roomTypesQuery = useQuery({
@@ -112,11 +126,20 @@ export default function EditRoom() {
                     facilities: values.roomFacilites,
                     roomSize: values.roomSize.toString()
                 },
-                'roomFacilites'
+                ['roomFacilites', 'photo']
             )
-            console.log(body)
-            console.log(fileList)
             await updateRoomMutation.mutateAsync(body)
+            const newPhotoData = values.photo.filter((file) => file.originFileObj as File)
+            const urlPath = values.photo.filter((file) => file.url).map((item) => item.url?.replace(`${URL_IMAGE}`, ''))
+            if (newPhotoData.length > 0 || urlPath.length !== data?.data.data.imagePath.length) {
+                const form = new FormData()
+                newPhotoData.length > 0 &&
+                    newPhotoData.forEach((file) => {
+                        form.append('image', file.originFileObj as File)
+                    })
+                form.append('data', new Blob([JSON.stringify(urlPath)], { type: 'application/json' }))
+                await updateImageMutation.mutateAsync({ roomId: Number(roomId), formData: form })
+            }
             toast.success('Update room successfully')
             navigate(`/hotel/${hotelId}/room-management`)
         } catch (error) {

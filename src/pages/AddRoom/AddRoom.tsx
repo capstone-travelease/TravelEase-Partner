@@ -22,7 +22,7 @@ import { toast } from 'react-toastify'
 import roomApi from 'src/apis/room.api'
 import Facilities from 'src/components/Facilities'
 
-export type RoomFormValues = {
+export type AddRoomFormValues = {
     roomName: string
     roomPrice: number
     roomType: number
@@ -32,6 +32,7 @@ export type RoomFormValues = {
     roomBedQuantity: number
     roomCapacity: number
     roomFacilites: number[]
+    roomPhoto: UploadFile[]
 }
 
 const uploadButton = (
@@ -63,6 +64,10 @@ export default function AddRoom() {
         mutationFn: roomApi.addRoom
     })
 
+    const uploadRoomImageMutation = useMutation({
+        mutationFn: roomApi.uploadRoomImage
+    })
+
     const handlePreview = async (file: UploadFile) => {
         const urlImage = file.url ? file.url : URL.createObjectURL(file.originFileObj as File)
         setPreviewImage(urlImage)
@@ -76,19 +81,26 @@ export default function AddRoom() {
         setFileList(newFileList)
     }
 
-    const handleSubmit = async (values: RoomFormValues) => {
+    const handleSubmit = async (values: AddRoomFormValues) => {
         try {
+            if (!hotelId) throw new Error()
             const hotelBody = omit(
                 {
                     ...values,
                     hotelId: Number(hotelId),
                     roomSize: values.roomSize.toString()
                 },
-                'photo'
+                'roomPhoto'
             )
-            console.log(hotelBody)
             setIsLoading(true)
-            await addRoomMutation.mutateAsync(hotelBody)
+            const res = await addRoomMutation.mutateAsync(hotelBody)
+            const { roomId } = res.data
+            const formData = new FormData()
+            values.roomPhoto.forEach((file) => {
+                console.log('file', file)
+                formData.append('images', file.originFileObj as File)
+            })
+            await uploadRoomImageMutation.mutateAsync({ roomId, formData })
             toast.success('Create room successfully')
             navigate(`/hotel/${hotelId}/room-management`)
         } catch (error) {
@@ -108,7 +120,7 @@ export default function AddRoom() {
                         <div className='text-gray-500'>Upload some images for your room</div>
                         <div className='mt-5'>
                             <Form.Item
-                                name='photo'
+                                name='roomPhoto'
                                 valuePropName='fileList'
                                 getValueFromEvent={(event) => {
                                     return event.fileList

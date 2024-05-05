@@ -1,9 +1,9 @@
-import { RoomFormValues } from 'src/pages/AddRoom/AddRoom'
+import { AddRoomFormValues } from 'src/pages/AddRoom/AddRoom'
 import { RoomDetailResponse, RoomListResponse, RoomType, UpdateRoomFormValues } from 'src/types/room.type'
 import http from 'src/utils/http'
 
 const roomApi = {
-    addRoom: (body: RoomFormValues & { hotelId: number }) => {
+    addRoom: (body: Omit<AddRoomFormValues, 'roomPhoto'> & { hotelId: number }) => {
         return http.post<{ code: number; message: string; roomId: number }>('/room-management/rooms', body)
     },
     getRoomType: () => {
@@ -19,6 +19,28 @@ const roomApi = {
     },
     updateRoom: (body: UpdateRoomFormValues) => {
         return http.put<{ code: number; message: string }>(`/room-management/rooms`, body)
+    },
+    uploadRoomImage: ({ roomId, formData }: { roomId: string | number; formData: FormData }) => {
+        return http.post<{ code: number; message: string; url: string }>(
+            `/room-management/rooms/images?roomId=${roomId}`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+        )
+    },
+    updateRoomImage: ({ roomId, formData }: { roomId: string | number; formData: FormData }) => {
+        return http.put<{ code: number; message: string; url: string }>(
+            `room-management/rooms/image/${roomId}`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+        )
     }
 }
 

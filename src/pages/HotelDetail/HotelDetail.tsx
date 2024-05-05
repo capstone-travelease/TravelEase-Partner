@@ -82,7 +82,7 @@ export default function HotelDetail() {
                         uid: `${url} + ${Math.random()}`,
                         name: url.substring(url.lastIndexOf('/') + 1),
                         status: 'done',
-                        url: `${URL_IMAGE}/${url}`
+                        url: `${URL_IMAGE}${url}`
                     }
                 })
             })
@@ -116,9 +116,7 @@ export default function HotelDetail() {
             setIsLoadingUpdate(true)
             await updateHotelMutation.mutateAsync({ hotelId: hotelId as string, body: hotelData })
             const newPhotoData = values.photo.filter((file) => file.originFileObj as File)
-            const urlPath = values.photo
-                .filter((file) => file.url)
-                .map((item) => item.url?.replace(`${URL_IMAGE}/`, ''))
+            const urlPath = values.photo.filter((file) => file.url).map((item) => item.url?.replace(`${URL_IMAGE}`, ''))
 
             if (newPhotoData.length > 0 || urlPath.length !== data?.data.data.hotelImage.length) {
                 const form = new FormData()
