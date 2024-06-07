@@ -49,6 +49,7 @@ export default function HotelManagementLayout({ children }: HotelManagementLayou
                             inlineIndent={24}
                             defaultSelectedKeys={[tab]}
                             onClick={(info) => {
+                                if (info.key === 'feedback') return
                                 navigate(`/hotel/${hotelId}/${info.key}`)
                             }}
                             className='bg-[#180101] !border-none text-base'

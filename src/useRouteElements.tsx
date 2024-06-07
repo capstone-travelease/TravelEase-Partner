@@ -15,6 +15,7 @@ import HotelDetail from 'src/pages/HotelDetail'
 import RoomManagement from 'src/pages/RoomManagement'
 import BookingManagment from 'src/pages/BookingManagement'
 import EditRoom from 'src/pages/EditRoom'
+import BookingDetail from 'src/pages/BookingDetail'
 
 const ProtectedRoutes = () => {
     const { isAuthenticated } = useContext(AppContext)
@@ -119,6 +120,14 @@ export default function useRouteElements() {
                     element: (
                         <HotelManagementLayout>
                             <BookingManagment />
+                        </HotelManagementLayout>
+                    )
+                },
+                {
+                    path: ROUTES.BOOKING_DETAIL,
+                    element: (
+                        <HotelManagementLayout>
+                            <BookingDetail />
                         </HotelManagementLayout>
                     )
                 },

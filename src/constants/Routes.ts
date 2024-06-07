@@ -11,5 +11,6 @@ export const ROUTES = {
     HOTEL_DETAIL: '/hotel/:hotelId/hotel-detail',
     ROOM_MANAGEMENT: '/hotel/:hotelId/room-management',
     BOOKING_MANAGEMENT: '/hotel/:hotelId/booking-management',
-    EDIT_ROOM: '/hotel/:hotelId/edit-room/:roomId'
+    EDIT_ROOM: '/hotel/:hotelId/edit-room/:roomId',
+    BOOKING_DETAIL: '/hotel/:hotelId/booking-detail/:bookingId'
 } as const

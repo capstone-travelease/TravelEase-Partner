@@ -1,37 +1,9 @@
 import type { Dayjs } from 'dayjs'
 import type { BadgeProps, CalendarProps } from 'antd'
 import { Badge, Calendar } from 'antd'
-
-const getListData = (value: Dayjs) => {
-    let listData
-    switch (value.date()) {
-        case 8:
-            listData = [
-                { type: 'warning', content: 'This is warning event.' },
-                { type: 'success', content: 'This is usual event.' }
-            ]
-            break
-        case 10:
-            listData = [
-                { type: 'warning', content: 'This is warning event.' },
-                { type: 'success', content: 'This is usual event.' },
-                { type: 'error', content: 'This is error event.' }
-            ]
-            break
-        case 15:
-            listData = [
-                { type: 'warning', content: 'This is warning event' },
-                { type: 'success', content: 'This is very long usual event......' },
-                { type: 'error', content: 'This is error event 1.' },
-                { type: 'error', content: 'This is error event 2.' },
-                { type: 'error', content: 'This is error event 3.' },
-                { type: 'error', content: 'This is error event 4.' }
-            ]
-            break
-        default:
-    }
-    return listData || []
-}
+import { useQuery } from '@tanstack/react-query'
+import { bookingApi } from 'src/apis/booking.api'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const getMonthData = (value: Dayjs) => {
     if (value.month() === 8) {
@@ -39,7 +11,25 @@ const getMonthData = (value: Dayjs) => {
     }
 }
 
+const checkStatus = (status: number) => {
+    switch (status) {
+        case 1:
+            return 'warning'
+        case 2:
+            return 'success'
+        case 3:
+            return 'error'
+        case 4:
+            return 'default'
+        default:
+            return 'default'
+    }
+}
+
 export default function BookingManagment() {
+    const navigate = useNavigate()
+    const { hotelId } = useParams()
+
     const monthCellRender = (value: Dayjs) => {
         const num = getMonthData(value)
         return num ? (
@@ -50,13 +40,33 @@ export default function BookingManagment() {
         ) : null
     }
 
+    const { data } = useQuery({
+        queryKey: ['bookingList'],
+        queryFn: () => bookingApi.getBooking({ date: '2024-06-08' })
+    })
+
+    const getListData = (value: Dayjs) => {
+        const listData: { type: BadgeProps['status']; content: string }[] = []
+
+        data?.data.result.forEach((obj) => {
+            if (obj.date === value.date()) {
+                listData.push({
+                    type: checkStatus(obj.bookingStatus),
+                    content: obj.roomName
+                })
+            }
+        })
+
+        return listData || []
+    }
+
     const dateCellRender = (value: Dayjs) => {
         const listData = getListData(value)
         return (
             <ul className='events'>
-                {listData.map((item) => (
-                    <li key={item.content}>
-                        <Badge status={item.type as BadgeProps['status']} text={item.content} />
+                {listData.map((item, index) => (
+                    <li key={index}>
+                        <Badge status={item?.type as BadgeProps['status']} text={item?.content} />
                     </li>
                 ))}
             </ul>
@@ -71,7 +81,12 @@ export default function BookingManagment() {
 
     return (
         <div className='m-10'>
-            <Calendar cellRender={cellRender} />
+            <Calendar
+                cellRender={cellRender}
+                onSelect={(date) => {
+                    navigate(`/hotel/${hotelId}/booking-detail/${date.date()}`)
+                }}
+            />
         </div>
     )
 }
